@@ -3,7 +3,7 @@ import UIKit
 
 extension AppRouter {
     public class func popFromTopNavigation(animated animated: Bool = true, completion: Action? = nil) {
-        topViewController()?.navigationController?.popViewController(animated, completion: completion)
+        topViewController()?.navigationController?.popViewController(animated: animated, completion: completion)
     }
 }
 
@@ -74,12 +74,12 @@ extension UINavigationController {
 
 extension UINavigationController {
     public func pushViewController(viewController: UIViewController, animated: Bool, completion: Action?) {
-        guard !viewControllers.contains(viewController) else { return }
+        guard !viewControllers.contains(viewController) else { return AppRouter.print("#[AppRouter] can't push \"\(String(viewController.dynamicType))\", already in navigation stack!") }
         pushViewController(viewController, animated: animated)
         _сoordinator(animated, completion: completion)
     }
     
-    public func popViewController(animated: Bool, completion: Action?) -> UIViewController? {
+    public func popViewController(animated animated: Bool, completion: Action?) -> UIViewController? {
         guard let popped = popViewControllerAnimated(animated) else { return nil }
         _сoordinator(animated, completion: completion)
         return popped
@@ -97,7 +97,7 @@ extension UINavigationController {
         return popped
     }
     
-    public func popToRootViewControllerAnimated(animated: Bool, completion: Action?) -> [UIViewController]? {
+    public func popToRootViewController(animated animated: Bool, completion: Action?) -> [UIViewController]? {
         guard let popped = popToRootViewControllerAnimated(animated) else { return nil }
         _сoordinator(animated, completion: completion)
         return popped

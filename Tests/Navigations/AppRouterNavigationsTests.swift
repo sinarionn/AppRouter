@@ -74,6 +74,8 @@ class AppRouterNavigationsTests: XCTestCase {
         let second = SecondController()
         let third = ThirdController()
 
+        XCTAssertNil(nav.popViewController(animated: true, completion: { XCTFail() }))
+        
         nav.viewControllers = [first]
         XCTAssertNil(first.pop(animated: true, completion: { XCTFail() }))
         
@@ -100,6 +102,8 @@ class AppRouterNavigationsTests: XCTestCase {
         let second = SecondController()
         let third = ThirdController()
 
+        XCTAssertNil(nav.popViewController(animated: false, completion: { XCTFail() }))
+        
         nav.viewControllers = [first]
         XCTAssertNil(first.pop(animated: false, completion: { XCTFail() }))
         
@@ -114,6 +118,96 @@ class AppRouterNavigationsTests: XCTestCase {
                 XCTAssertTrue(popped?.first == second)
                 XCTAssertTrue(popped?.last == third)
                 XCTAssertNil(first.pop(animated: false))
+                expectation.fulfill()
+            }
+        }
+        waitForExpectationsWithTimeout(4, handler: nil)
+    }
+    
+    func testPopGenericViewControllerAnimated() {
+        let nav = UINavigationController()
+        let first = FirstController()
+        let second = SecondController()
+        let third = ThirdController()
+
+        nav.viewControllers = [first, second, third]
+        XCTAssertNil(nav.popToViewController(UITabBarController.self, animated: true, completion: { XCTFail() }))
+        
+        AppRouter.rootViewController = nav
+        let expectation =  expectationWithDescription("")
+        delay(0) {
+            var popped : [UIViewController]? = []
+            popped = nav.popToViewController(FirstController.self, animated: true) {
+                XCTAssertTrue(popped?.first == second)
+                XCTAssertTrue(popped?.last == third)
+                XCTAssertTrue(nav.viewControllers.last == first)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectationsWithTimeout(4, handler: nil)
+    }
+    
+    func testPopGenericViewController() {
+        let nav = UINavigationController()
+        let first = FirstController()
+        let second = SecondController()
+        let third = ThirdController()
+        
+        nav.viewControllers = [first, second, third]
+        XCTAssertNil(nav.popToViewController(UITabBarController.self, animated: false, completion: { XCTFail() }))
+        
+        AppRouter.rootViewController = nav
+        let expectation =  expectationWithDescription("")
+        var popped : [UIViewController]? = []
+        popped = nav.popToViewController(FirstController.self, animated: false) {
+            delay(0){
+                XCTAssertTrue(popped?.first == second)
+                XCTAssertTrue(popped?.last == third)
+                XCTAssertTrue(nav.viewControllers.last == first)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectationsWithTimeout(4, handler: nil)
+    }
+    
+    func testPopToRootViewControllerAnimated() {
+        let nav = UINavigationController()
+        let first = FirstController()
+        let second = SecondController()
+        let third = ThirdController()
+        
+        nav.viewControllers = [first, second, third]
+        
+        AppRouter.rootViewController = nav
+        let expectation =  expectationWithDescription("")
+        delay(0) {
+            var popped : [UIViewController]? = []
+            popped = nav.popToRootViewController(animated: true) {
+                XCTAssertTrue(popped?.first == second)
+                XCTAssertTrue(popped?.last == third)
+                XCTAssertTrue(nav.viewControllers.last == first)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectationsWithTimeout(4, handler: nil)
+    }
+    
+    func testPopToRootViewController() {
+        let nav = UINavigationController()
+        let first = FirstController()
+        let second = SecondController()
+        let third = ThirdController()
+        
+        nav.viewControllers = [first, second, third]
+        AppRouter.rootViewController = nav
+
+        let expectation =  expectationWithDescription("")
+        var popped : [UIViewController]? = []
+        popped = nav.popToRootViewController(animated: false) {
+            delay(0){
+                XCTAssertTrue(popped?.first == second)
+                XCTAssertTrue(popped?.last == third)
+                XCTAssertTrue(nav.viewControllers.last == first)
                 expectation.fulfill()
             }
         }
@@ -168,13 +262,52 @@ class AppRouterNavigationsTests: XCTestCase {
         waitForExpectationsWithTimeout(4, handler: nil)
     }
     
-//    func testPopViewController() {
-//      let first = FirstController()
-//      let second = SecondController()
-//      let third = ThirdController()
-//        let expectation =  expectationWithDescription("")
-//        waitForExpectationsWithTimeout(1, handler: nil)
-//    }
+    func testPushOnNavigationController() {
+        let nav = UINavigationController()
+        let first = FirstController()
+        let second = SecondController()
+        
+        nav.viewControllers = [first]
+        AppRouter.rootViewController = nav
+        let expectation = expectationWithDescription("")
+        
+        delay(0) {
+            nav.pushViewController(second, animated: false) {
+                XCTAssertTrue(nav.viewControllers.last == second)
+                nav.pushViewController(second, animated: false, completion: { 
+                    XCTFail()
+                })
+                delay(0.1) {
+                    expectation.fulfill()
+                }
+            }
+        }
+        waitForExpectationsWithTimeout(4, handler: nil)
+    }
+    
+    func testPushOnNavigationControllerAnimated() {
+        let nav = UINavigationController()
+        let first = FirstController()
+        let second = SecondController()
+        
+        nav.viewControllers = [first]
+        AppRouter.rootViewController = nav
+        let expectation = expectationWithDescription("")
+        
+        delay(0) {
+            nav.pushViewController(second, animated: true) {
+                XCTAssertTrue(nav.viewControllers.last == second)
+                nav.pushViewController(second, animated: true, completion: {
+                    XCTFail()
+                })
+                delay(0.5) {
+                    expectation.fulfill()
+                }
+            }
+        }
+        waitForExpectationsWithTimeout(4, handler: nil)
+    }
+
 }
 
 internal func delay(delay:Double, _ closure:()->()) {
