@@ -1,3 +1,10 @@
+![Build Status](https://travis-ci.org/sinarionn/AppRouter.svg?branch=master) &nbsp;
+[![codecov.io](http://codecov.io/github/sinarionn/AppRouter/coverage.svg?branch=master)](http://codecov.io/github/sinarionn/AppRouter?branch=master)
+![CocoaPod platform](https://cocoapod-badges.herokuapp.com/p/AppRouter/badge.png) &nbsp;
+![CocoaPod version](https://cocoapod-badges.herokuapp.com/v/AppRouter/badge.png) &nbsp;
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
+[![Packagist](https://img.shields.io/badge/license-MIT-blue.svg)]()
+
 # AppRouter
 Provides bunch of methods for controller creation / managing / presentation
 
