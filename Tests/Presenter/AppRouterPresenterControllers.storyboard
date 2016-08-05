@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="5Cd-Vt-gff">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--App Router Presenter Additional Controller-->
+        <scene sceneID="87G-m2-8aI">
+            <objects>
+                <viewController storyboardIdentifier="AppRouterPresenterAdditionalController" id="wgT-1U-EE9" customClass="AppRouterPresenterAdditionalController" customModule="CodeSnippetsTests" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="f1z-dD-a2H"/>
+                        <viewControllerLayoutGuide type="bottom" id="giX-pK-68r"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wKt-4e-mFK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bk8-Hh-CG1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="42" y="-88"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="6Hp-wP-haz">
+            <objects>
+                <navigationController id="CGy-IF-gpl" customClass="AppRouterPresenterNavigationController" customModule="CodeSnippetsTests" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="gmk-lH-zjY"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="GnA-ls-aRo">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="dZn-5s-4Ab" kind="relationship" relationship="rootViewController" id="YhO-kE-BXx"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="30u-bI-Emx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="42" y="459"/>
+        </scene>
+        <!--App Router Presenter Base Controller-->
+        <scene sceneID="R7d-su-kKg">
+            <objects>
+                <viewController id="dZn-5s-4Ab" customClass="AppRouterPresenterBaseController" customModule="CodeSnippetsTests" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mtR-Rc-JVX"/>
+                        <viewControllerLayoutGuide type="bottom" id="yzy-Cg-vET"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="T7u-PR-PlR">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="2zj-c5-h11"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="g23-DV-yU2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="470" y="459"/>
+        </scene>
+        <!--App Router Presenter Tab Bar Controller-->
+        <scene sceneID="cFf-40-Fsg">
+            <objects>
+                <tabBarController id="5Cd-Vt-gff" customClass="AppRouterPresenterTabBarController" customModule="CodeSnippetsTests" customModuleProvider="target" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="CBG-7y-hbA">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="CGy-IF-gpl" kind="relationship" relationship="viewControllers" id="zd1-P8-GwQ"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3n2-sL-9o3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-423" y="459"/>
+        </scene>
+    </scenes>
+</document>

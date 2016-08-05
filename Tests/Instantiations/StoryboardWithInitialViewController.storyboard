@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fh1-Wa-ENn">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--Storyboard With Initial View Controller-->
+        <scene sceneID="hR4-To-7mZ">
+            <objects>
+                <viewController id="fh1-Wa-ENn" customClass="StoryboardWithInitialViewController" customModule="CodeSnippetsTests" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="BFP-os-Pnz"/>
+                        <viewControllerLayoutGuide type="bottom" id="dxU-Jw-gWW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="jG7-y4-Dau">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fag-fR-N56" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="467" y="349"/>
+        </scene>
+        <!--Storyboard With Initial View Controller-->
+        <scene sceneID="JDv-BT-4TG">
+            <objects>
+                <viewController storyboardIdentifier="StoryboardWithInitialViewController" id="7E0-HW-6Xo" customClass="StoryboardWithInitialViewController" customModule="CodeSnippetsTests" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="x63-18-goX"/>
+                        <viewControllerLayoutGuide type="bottom" id="ley-4P-vVN"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8al-iI-3vx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AIM-fr-xxn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="467" y="1096"/>
+        </scene>
+    </scenes>
+</document>
