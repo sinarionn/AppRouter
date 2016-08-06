@@ -106,7 +106,7 @@ class AppRouterNavigationsTests: XCTestCase {
         
         nav.viewControllers = [first]
         XCTAssertNil(first.pop(animated: false, completion: { XCTFail() }))
-        
+
         nav.viewControllers = [first, second, third]
         XCTAssertNil(first.pop(animated: true, completion: { XCTFail() }))
         

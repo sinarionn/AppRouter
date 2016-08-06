@@ -111,4 +111,9 @@ class AppRouterPresenterTests: XCTestCase {
         XCTAssertTrue(pushed.initialized)        
         XCTAssertNil(AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests", initial: true).push())
     }
+    
+    func testPresenterOnInstance() {
+        let controller = UIViewController()
+        XCTAssertTrue(controller.presenter().provideSourceController() == controller)
+    }
 }

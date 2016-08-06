@@ -39,14 +39,6 @@ class AppRouterInstantiationsTests: XCTestCase {
         waitForExpectationsWithTimeout(1, handler: nil)
     }
     
-    func testInstantiateInsideNavigationFromStoryboardWithInitialViewController() {
-        let navigationController = StoryboardWithInitialNavigationController.instantiateInsideNavigation(initial: true)!
-        let controller = navigationController.viewControllers.first as! StoryboardWithInitialNavigationController
-        controller.viewDidLoadExpectation = expectationWithDescription("viewDidLoad should be called")
-        _ = controller.view
-        waitForExpectationsWithTimeout(1, handler: nil)
-    }
-    
     func testInstantiateFromXib() {
         let controller = XibWithViewController.instantiateFromXib()
         controller?.viewDidLoadExpectation = expectationWithDescription("viewDidLoad should be called")
