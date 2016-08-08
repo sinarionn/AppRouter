@@ -6,127 +6,129 @@
 [![Packagist](https://img.shields.io/badge/license-MIT-blue.svg)]()
 
 # AppRouter
-Provides bunch of methods for controller creation / managing / presentation
 
-### Accessors:
-###### AppRouter:
-- class var **rootViewController** - returns current window rootViewController
-- class var **topViewController** - returns topmost controller
-- class func **topViewController(**base: UIViewController**)** - returns topmost controller starting from specified
+Extremely easy way to handle controller creation / presentation / navigation and reduce coherence in project in general.
 
-###### UITabBarController:
-- func **getControllerInstance(**Type**)** - returns instance with specified type from current viewControllers
-- func **setSelectedViewController(**Type**)** - gets instance with specified type and makes it to be selectedViewController
+## Requirements
 
-###### UINavigationController:
-- func **getControllerInstance(**Type**)** - returns instance with specified type from current viewControllers
-- func **popToViewController(**Type**)** - tries to pop to viewController with specified type
+- iOS 8.0+
+- Xcode 7.3+
 
-###### UIViewController:
-- class var **isModal** - returns true if controller or its navigation controller is modaly presented
+## Installation
 
-### Instantiations:
-###### UIViewController:
-- class func **instantiate(**storyboardName, initial**)** - returns instance of current type created from storyboard with provided name or using String(self) as name.
-- class func **instantiateInsideNavigation(**storyboardName, initial**)** - return navigationController created by class name or initial of specified if its first controller type == Self
-- class func **instantiateFromXib(**xibName**)** - returns instance of current type created from xib with provided name or using String(self) as name.
+### CocoaPods
 
-###### UIStoryboard:
-- func **instantiateViewController(**Type, initial**)** - instantiates controller using its class name as identifier or initial if specified. If instantiation returns UINavigationController - tries to use it first controller from stack
-- func **instantiateViewControllerInsideNavigation(**Type, initial**)** - return navigationController created by class name or initial of specified if its first controller type == Type
+[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
 
-### Navigations:
-###### AppRouter:
-- class func **popFromTopNavigation(**animated, completion**)** - pops topmost controller if it's embedded in navigation controller
-
-###### UIViewController:
-- func **pop(**animated, completion**)** - pops to previous controller in navigation stack. Do nothing if current is first or there no navigation controller. Returns array with controller which was popped.
-- func **close(**animated, completion**)** - tries to close controller by popping to previous in navigation stack or by dismissing if modal.
-
-###### UINavigationController:
-- func **pushViewController(**animated, completion**)** - provides ability to specify completion block for standard pushViewController method. Completion called ONLY if push happens.
-- func **popViewController(**animated, completion**)** - bunch of methods which provides completion block to standard popViewController methods. Completion called ONLY if pop happens.
-
-### Presenter:
-###### UIViewController:
-- class func **presenter()** - return ViewControllerPresentConfiguration that can be used for configuring and presenting current type controller.
-- func **presenter()** - return ViewControllerPresentConfiguration which uses current controller instance as source controller and can be used for configuring and presenting.
-
-###### ViewControllerPresentConfiguration:
-- var **target** - provides target on which presentation will be applied
-- var **source** - provides controller which will be configured, embedded and presented
-- var **embedder** - provides ability to embed source before presentation.
-- var **configurator** - configure source before presentation
-
-
-- func **onTop()** - declare AppRouter.topViewController to be a **target** provider
-- func **onRoot()** - declare AppRouter.rootViewController to be a **target** provider
-- func **onCustom(**targetBlock**)** - declare controller which will be returned by block as **target**
-
-
-- func **fromStoryboard(**name, initial**)** - declare **source** provider to take controller from storyboard
-- func **fromXib(**name**)** - declare **source** provider to take controller from xib
-
-
-- func **configure(**configurator**)** - declare **configuration** block which used to configure controller before presentation
-
-
-- func **embedInNavigation(**navigationController**)** - declare **embedder** provider to embed controller in a custom UINavigationController before presentation
-- func **embedInTabBar(**tabBarController**)** - declare **embedder** provider to embed controller in UITabBarController before presentation
-- func **embedIn(**embederBlock**)** - declare custom anonymous **embedder** provider
-
-
-- func **push(**animated, completion**)** - takes controller from **source** provider, embeds it using **embedder** and push it on navigation controller provided by **target**
-- func **present(**animated, completion**)** - takes controller from **source** provider, embeds it using **embedder** and present it on controller provided by **target**
-
-- func **provideSourceController()** - takes controller from **source** provider and configures it using **configuration** block.
-- func **provideEmbeddedSourceController()** - takes controller from **source** provider, configures it using **configuration** block, and embeds it using **embedder**
-
-
-### Examples:
+```bash
+$ gem install cocoapods
 ```
-extension ViewControllerPresentConfiguration {
-    func embedInYummiNavigation() -> ViewControllerPresentConfiguration {
-        let navController = UINavigationController()
-        navController.navigationBar.barTintColor = UIColor.grayColor()
-        navController.navigationBar.translucent = false
-        return self.embedInNavigation(navController)
-    }
-}
 
+To integrate AppRouter into your Xcode project using CocoaPods, specify it in your `Podfile`:
+
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+use_frameworks!
+
+pod 'AppRouter'
+```
+
+Then, run the following command:
+
+```bash
+$ pod install
+```
+
+### Carthage
+
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
+
+You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
+
+```bash
+$ brew update
+$ brew install carthage
+```
+
+To integrate AppRouter into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
+github "sinarionn/AppRouter"
+```
+
+## Examples
+
+#### Presentations
+
+Imagine that you want to present some controller and for this you need other controller to present on. Usual way forces us to pass controller through weak properties or to use delegation mechanic. We can avoid this situation and just call:
+
+```swift
+AppRouter.topViewController?.presentViewController(newOne, animated: true, completion: nil)
+```  
+or even
+```swift
+newOne.presenter().present()
+```
+
+#### Easy accessors
+```swift
+// provides access to keyWindow (also creates one if current is nil)
+AppRouter.window
+
+// root controller in current window stack
+AppRouter.rootViewController
+
+// topmost controller
+AppRouter.topViewController
+
+// returns instance of passed type if its present in tabBar (even if it's embedded in navigationController)
+tabBarController.getControllerInstance<T: UIViewController>(_:) -> T?
+
+// returns instance of passed type if its present in navigationController
+navigationController.getControllerInstance<T: UIViewController>(_:) -> T?
+
+// returns true if current controller modally presented
+viewController.isModal
+```
+
+#### Easy Construction, Configuration, Presentation
+
+Of course it's always better to extract controller creation, configuration and presentation logic out of other controllers and views into FlowControllers or just simple extension methods (if you want this new controller work results - give them completion block or try using **reactive** ways). This will significantly reduce coherence and allow you to modify only one place in whole app to change logic behind feature :
+
+```swift
 extension AppRouter {
-    func presentGridPictureGalleryControllerWith(pictures: PicturesRepresentation) {
-        GridPictureGalleryController.presenter().fromStoryboard("GridPictureGallery").embedInNavigation(AppRouter.defaultNavigationController().then {
-            $0.navigationBar.tintColor = UIColor.whiteColor()
-            $0.modalTransitionStyle = .CrossDissolve
-        }).configure{ $0.picturesRepresentation = pictures }.present()
-    }
-    func presentChangePasswordController() {
-        ChangePasswordViewController.presenter().push()
-    }
-    func presentExploreDetailsController(initialPostPicture: PostPicture?) {
-        ExploreDetailsViewController.presenter().onRoot().configure{
-          $0.postPicture = initialPostPicture
-        }.embedInNavigation(AppRouter.defaultNavigationController().then {
-              $0.modalTransitionStyle = .CrossDissolve
-              $0.navigationBar.tintColor = .whiteColor()
-        }).present()
-    }
-    func presentSearchController(startingFromTabIndex startingFrom : Int = 0, initialSearch : String = "") {
-        SearchViewController.presenter().fromStoryboard("Search").onRoot().embedInYummiNavigation().configure{
-            $0.startingTabIndex = startingFrom
-            $0.initialSearch = initialSearch
-        }.present()
-    }   
+  static func openGridPictureGalleryControllerWith(pictures: PicturesRepresentation) {
+    GridPictureGalleryController.presenter().fromStoryboard("GridPictureGallery").embedInNavigation().configure{
+      $0.picturesRepresentation = pictures
+    }.present()
+  }
+  static func openChangePasswordController() {
+    ChangePasswordViewController.presenter().push()
+  }
 }
-
 ```
 
-### TODO:
-Due to time limitations some functionality wasn't properly tested. Use it on your own risk.
-Untested methods:
-- UIViewController.isModal
-- UIViewController.instantiateInsideNavigation
-- UIViewController.pop(animated, completion)
-- UINavigationController.pushViewController(animated, completion)
-- UINavigationController.popViewController(animated, completion)
+**Note:** framework by default uses name of your UIViewController subclass as storyboard identifier to find viewController in storyboard (using String(controllerType))
+
+#### Completion handlers
+
+In addition to presentation / dismissal completion blocks provided by UiKit, AppRouter provides you completion blocks for pushing/popping controllers onto navigation stack:
+
+```swift
+pushViewController(_, animated:, completion:)
+popViewController(animated animated:, completion:)
+popToViewController(_:, animated:, completion:)
+popToRootViewController(animated animated:, completion:)
+popToViewController<T: UIViewController>(_:, animated:, completion:)
+```
+
+#### Closing controller
+
+Another possible scenario: feature controller that can be pushed or presented in different parts of application. Simplest way to make such controller gone (close button or etc) is to use close method. Just:
+```swift
+@IBAction func closeTapped(sender: UIButton!) {
+  self.close()
+}
+```
+And thats it. Method will try to detect the proper way to make controller gone.
