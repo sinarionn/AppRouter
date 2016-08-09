@@ -126,4 +126,32 @@ class AppRouterAccessorsTests: XCTestCase {
         })
         waitForExpectationsWithTimeout(1, handler: nil)
     }
+    
+    func testTopViewControllerWithCustomContainer() {
+        let nav = UINavigationController(rootViewController: SecondController())
+        AppRouter.rootViewController = nav
+        XCTAssert(AppRouter.topViewController is ThirdController)
+    }
+    
+    func testTopFromEmptyNavigation() {
+        let nav = UINavigationController()
+        AppRouter.rootViewController = nav
+        XCTAssertTrue(AppRouter.topViewController == nav)
+        nav.presentViewController(FirstController(), animated: false, completion: nil)
+        XCTAssertTrue(AppRouter.topViewController is FirstController)
+    }
+    
+    func testTopFromEmptyTabBar() {
+        let tab = UITabBarController()
+        AppRouter.rootViewController = tab
+        XCTAssertTrue(AppRouter.topViewController == tab)
+        tab.presentViewController(FirstController(), animated: false, completion: nil)
+        XCTAssertTrue(AppRouter.topViewController is FirstController)
+    }
+}
+
+extension SecondController {
+    override func toppestControllerFromCurrent() -> UIViewController? {
+        return ThirdController()
+    }
 }

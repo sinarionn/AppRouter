@@ -13,29 +13,43 @@ extension AppRouter {
         return topViewController()
     }
     
-    /// Use this block to provide additional restrictions in topViewController algorithm.
-    /// Can be helpful in rare cases, when unwanted controller is still in hierarchy (example: FBSDKContainerViewController).
-    ///
-    /// - returns: True - if topViewController algorithm should stop and use previous controller as top.
-    public static var stopBlockForTopViewController: (UIViewController) -> Bool = { _ in return false }
-    
     /// recursively tries to detect topmost controller
     /// - parameter startingFrom: Specify controller which will be used as start point for searching
     /// - returns: returns top-most controller if exists
     public class func topViewController(startingFrom base: UIViewController? = AppRouter.rootViewController) -> UIViewController? {
-        if let base = base where stopBlockForTopViewController(base) { return nil }
-        if let nav = base as? UINavigationController where !stopBlockForTopViewController(nav) {
-            return topViewController(startingFrom: nav.visibleViewController) ?? nav
-        }
-        if let tab = base as? UITabBarController where !stopBlockForTopViewController(tab) {
-            return topViewController(startingFrom: tab.selectedViewController) ?? tab
-        }
-        if let presented = base?.presentedViewController {
-            return topViewController(startingFrom: presented) ?? base
-        }
+        if let topper = base?.toppestControllerFromCurrent() { return topViewController(startingFrom: topper) ?? base }
         return base
     }
 }
+
+protocol ARToppestControllerProvider {
+    func toppestControllerFromCurrent() -> UIViewController?
+}
+extension UIViewController : ARToppestControllerProvider {
+    /// ARToppestControllerProvider implementation
+    ///
+    /// - returns: presentedViewController
+    func toppestControllerFromCurrent() -> UIViewController? {
+        return self.presentedViewController
+    }
+}
+extension UINavigationController {
+    /// ARToppestControllerProvider implementation
+    ///
+    /// - returns: visibleViewController
+    override func toppestControllerFromCurrent() -> UIViewController? {
+        return self.visibleViewController
+    }
+}
+extension UITabBarController {
+    /// ARToppestControllerProvider implementation
+    ///
+    /// - returns: selectedViewController
+    override func toppestControllerFromCurrent() -> UIViewController? {
+        return self.selectedViewController ?? presentedViewController
+    }
+}
+
 
 extension UITabBarController {
     /// returns viewController of specified type if available

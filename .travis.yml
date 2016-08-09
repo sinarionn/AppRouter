@@ -15,4 +15,5 @@ language: objective-c
 osx_image: xcode7.3
 
 script:
+  - git submodule update --init --recursive
   - make install-$ACTION && make test-$ACTION

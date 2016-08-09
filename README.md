@@ -1,5 +1,5 @@
-![Build Status](https://travis-ci.org/sinarionn/AppRouter.svg?branch=master) &nbsp;
-[![codecov.io](http://codecov.io/github/sinarionn/AppRouter/coverage.svg?branch=master)](http://codecov.io/github/sinarionn/AppRouter?branch=master)
+![Build Status](https://travis-ci.org/MLSDev/AppRouter.svg?branch=master) &nbsp;
+[![codecov.io](http://codecov.io/github/MLSDev/AppRouter/coverage.svg?branch=master)](http://codecov.io/github/MLSDev/AppRouter?branch=master)
 ![CocoaPod platform](https://cocoapod-badges.herokuapp.com/p/AppRouter/badge.png) &nbsp;
 ![CocoaPod version](https://cocoapod-badges.herokuapp.com/v/AppRouter/badge.png) &nbsp;
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
@@ -18,43 +18,20 @@ Extremely easy way to handle controller creation / presentation / navigation and
 
 ### CocoaPods
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
-
-```bash
-$ gem install cocoapods
-```
-
-To integrate AppRouter into your Xcode project using CocoaPods, specify it in your `Podfile`:
-
 ```ruby
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0'
-use_frameworks!
-
 pod 'AppRouter'
 ```
 
-Then, run the following command:
+RxSwift extension for AppRouter with lifeCircle observables:
 
-```bash
-$ pod install
+```ruby
+pod 'AppRouter/RxSwift'
 ```
 
-### Carthage
+### Carthages
 
-[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
-
-You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
-
-```bash
-$ brew update
-$ brew install carthage
-```
-
-To integrate AppRouter into your Xcode project using Carthage, specify it in your `Cartfile`:
-
-```ogdl
-github "sinarionn/AppRouter"
+```ruby
+github "MLSDev/AppRouter"
 ```
 
 ## Examples
@@ -132,3 +109,21 @@ Another possible scenario: feature controller that can be pushed or presented in
 }
 ```
 And thats it. Method will try to detect the proper way to make controller gone.
+
+#### RxSwift extensions
+
+If you want some easy way to deal with controller lifecycle outside - try to use AppRouter/RxSwift subspec. It provides a bunch of Type and Instance observables around lifecycle methods (it uses swizzling underneath from the moment you subscribe) :
+
+```swift
+instance.onViewDidLoad() -> Observable<Void>
+instance.onViewWillAppear() -> Observable<Bool>
+instance.onViewDidAppear() -> Observable<Bool>
+instance.onViewWillDisappear() -> Observable<Bool>
+instance.onViewDidDisappear() -> Observable<Bool>
+
+Type.onViewDidLoad() -> Observable<Type>
+Type.onViewWillAppear() -> Observable<(controller: Type, animated: Bool)>
+Type.onViewDidAppear() -> Observable<(controller: Type, animated: Bool)>
+Type.onViewWillDisappear() -> Observable<(controller: Type, animated: Bool)>
+Type.onViewDidDisappear() -> Observable<(controller: Type, animated: Bool)>
+```
