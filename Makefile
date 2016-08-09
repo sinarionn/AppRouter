@@ -29,7 +29,7 @@ test-iOS:
 		| xcpretty -ct
 
 test-carthage:
-	carthage build --no-skip-current
+	carthage build --no-skip-current --platform iOS
 	ls Carthage/build/iOS/AppRouter.framework
 
 test-coverage:
