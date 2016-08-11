@@ -56,9 +56,36 @@ class AppRouterPresenterTests: XCTestCase {
         let presenter = AppRouterPresenterBaseController.presenter()
         guard let base = baseController else { return XCTFail() }
         presenter.configurator(base)
-        presenter.configure({ $0.initialized = true })        
+        XCTAssertFalse(base.initialized)
+        presenter.configure({ $0.initialized = true })
         presenter.configurator(base)
         XCTAssertTrue(base.initialized)
+    }
+    
+    func testPresenterProvideSourceController() {
+        let presenter = AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers")
+        guard let base = baseController else { return XCTFail() }
+        XCTAssertFalse(base.initialized)
+        presenter.configure({ $0.initialized = true })
+        let source = presenter.provideSourceController()
+        XCTAssertTrue(source?.initialized == true)
+    }
+    
+    func testPresenterProvideEmbeddedSourceController() {
+        let presenter = AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers")
+        let nav = UINavigationController()
+        guard let base = baseController else { return XCTFail() }
+        XCTAssertFalse(base.initialized)
+        presenter.configure({
+            $0.initialized = true
+            $0.navigationController?.title = "TestTitle"
+        }).embedInNavigation(nav)
+        let embedded = presenter.provideEmbeddedSourceController()
+        XCTAssertTrue(embedded === nav)
+        guard let embeddedNav = embedded as? UINavigationController else { return XCTFail() }
+        guard let first = embeddedNav.visibleViewController as? AppRouterPresenterAdditionalController else { return XCTFail() }
+        XCTAssertTrue(first.initialized == true)
+        XCTAssertTrue(embeddedNav.title == "TestTitle")
     }
     
     func testPresenterUtilityEmbeddingMethods() {

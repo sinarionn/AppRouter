@@ -100,8 +100,8 @@ public class ViewControllerPresentConfiguration<T: UIViewController> {
     /// - parameter completion: The block to execute after the view controller is pushed.
     /// - returns: returns instance provided by `source` provider
     public func push(animated animated: Bool = true, completion: Action? = nil) -> T? {
-        guard let sourceController = provideSourceController(),
-            let parent = provideEmbeddedController(sourceController) else { return nil }
+        guard let sourceController = source.provideController(T), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
+        configurator(sourceController)
         guard let targetController = target.provideController(UIViewController) else { debug("error fetching target controller"); return nil }
         guard let targetNavigation = (targetController as? UINavigationController) ?? targetController.navigationController else { debug("error fetching navigation controller"); return nil }
         targetNavigation.pushViewController(parent, animated: animated, completion: completion)
@@ -114,7 +114,8 @@ public class ViewControllerPresentConfiguration<T: UIViewController> {
     /// - parameter completion: The block to execute after the view controller is presented.
     /// - returns: returns instance provided by `source` provider
     public func present(animated animated: Bool = true, completion: Action? = nil) -> T? {
-        guard let sourceController = provideSourceController(), let parent = provideEmbeddedController(sourceController) else { return nil }
+        guard let sourceController = source.provideController(T), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
+        configurator(sourceController)
         guard let targetController = target.provideController(UIViewController) else { debug("error fetching target controller"); return nil }
         targetController.presentViewController(parent, animated: animated, completion: completion)
         return sourceController
@@ -129,12 +130,13 @@ public class ViewControllerPresentConfiguration<T: UIViewController> {
         return sourceController
     }
     
-    /// Provides source controller embedded in `embedder` controller.
+    /// Provides source controller embedded in `embedder` controller and configured for use.
     ///
     /// - returns: embedded controller.
     public func provideEmbeddedSourceController() -> UIViewController? {
         guard let sourceController = provideSourceController() else { return nil }
         guard let embedded = provideEmbeddedController(sourceController) else { return nil }
+        configurator(sourceController)
         return embedded
     }
     
