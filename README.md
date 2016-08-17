@@ -1,11 +1,10 @@
+![AppRouter Logo](/logo.png)
 ![Build Status](https://travis-ci.org/MLSDev/AppRouter.svg?branch=master) &nbsp;
 [![codecov.io](http://codecov.io/github/MLSDev/AppRouter/coverage.svg?branch=master)](http://codecov.io/github/MLSDev/AppRouter?branch=master)
 ![CocoaPod platform](https://cocoapod-badges.herokuapp.com/p/AppRouter/badge.png) &nbsp;
 ![CocoaPod version](https://cocoapod-badges.herokuapp.com/v/AppRouter/badge.png) &nbsp;
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
 [![Packagist](https://img.shields.io/badge/license-MIT-blue.svg)]()
-
-# AppRouter
 
 Extremely easy way to handle controller creation / presentation / navigation and reduce coherence in project in general.
 
