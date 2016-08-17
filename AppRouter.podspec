@@ -6,7 +6,8 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/MLSDev/AppRouter"
   s.license      = "MIT"
-  s.author             = { "Artem Antihevich" => "sinarionn@gmail.com" }
+  s.author       = { "Artem Antihevich" => "sinarionn@gmail.com" }
+  s.social_media_url = 'https://twitter.com/sinarionn'
 
   s.ios.deployment_target = "8.0"
   s.source       = { :git => "https://github.com/MLSDev/AppRouter.git", :tag => s.version.to_s }
