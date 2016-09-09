@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "AppRouter"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "UIViewController creation, navigation, utility methods for easy routing"
 
   s.homepage     = "https://github.com/MLSDev/AppRouter"

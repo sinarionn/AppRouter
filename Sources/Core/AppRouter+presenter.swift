@@ -134,7 +134,7 @@ public class ViewControllerPresentConfiguration<T: UIViewController> {
     ///
     /// - returns: embedded controller.
     public func provideEmbeddedSourceController() -> UIViewController? {
-        guard let sourceController = provideSourceController() else { return nil }
+        guard let sourceController = source.provideController(T) else { debug("error constructing source controller"); return nil }
         guard let embedded = provideEmbeddedController(sourceController) else { return nil }
         configurator(sourceController)
         return embedded
