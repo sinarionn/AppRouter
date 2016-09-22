@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'RxSwift' do |rxswift|
       rxswift.dependency 'AppRouter/Core'
-      rxswift.dependency 'RxSwift', '~> 2.6'
+      rxswift.dependency 'RxSwift', '~> 3.0.0-beta.1'
       rxswift.source_files = 'Sources/RxSwift/*.swift'
   end
 end
