@@ -99,6 +99,7 @@ open class ViewControllerPresentConfiguration<T: UIViewController> {
     /// - parameter animated: Set this value to true to animate the transition.
     /// - parameter completion: The block to execute after the view controller is pushed.
     /// - returns: returns instance provided by `source` provider
+    @discardableResult
     open func push(animated: Bool = true, completion: Action? = nil) -> T? {
         guard let sourceController = source.provideController(T.self), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
         configurator(sourceController)
@@ -113,6 +114,7 @@ open class ViewControllerPresentConfiguration<T: UIViewController> {
     /// - parameter animated: Set this value to true to animate the transition.
     /// - parameter completion: The block to execute after the view controller is presented.
     /// - returns: returns instance provided by `source` provider
+    @discardableResult
     open func present(animated: Bool = true, completion: Action? = nil) -> T? {
         guard let sourceController = source.provideController(T.self), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
         configurator(sourceController)

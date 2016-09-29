@@ -18,6 +18,7 @@ extension UIViewController {
     /// - parameter animated: Set this value to true to animate the transition
     /// - parameter completion: Called after transition ends successfully.
     /// - returns: [UIViewCotnroller]? - returns the popped controllers
+    @discardableResult
     public func pop(animated: Bool = true, completion: Action? = nil) -> [UIViewController]? {
         guard let stack = navigationController?.viewControllers , stack.count > 1 else {
             AppRouter.print("#[AppRouter] can't pop \"\(String(describing: self))\" when only one controller in navigation stack!")
@@ -43,6 +44,7 @@ extension UIViewController {
     /// - parameter animated: If true - transition animated
     /// - parameter completion: Called after transition ends successfully
     /// - returns: returns true if able to close
+    @discardableResult
     public func close(animated: Bool = true, completion: Action? = nil) -> Bool {
         if canPop() {
             _ = pop(animated: animated, completion: completion)
@@ -67,6 +69,7 @@ extension UITabBarController {
     ///
     /// - parameter type: required controller type
     /// - returns: True if changed successfully
+    @discardableResult
     public func setSelectedViewController<T: UIViewController>(_ type: T.Type) -> Bool {
         if let controller = self.getControllerInstance(T.self) {
             if self.viewControllers?.contains(controller) ?? false {
@@ -86,6 +89,7 @@ extension UINavigationController {
     /// - parameter type: Required type
     /// - parameter animated: Set this value to true to animate the transition
     /// - returns: [UIViewCotnroller]? - returns the popped controllers
+    @discardableResult
     public func popToViewController<T: UIViewController>(_ type: T.Type, animated: Bool) -> [UIViewController]? {
         guard let controller = self.getControllerInstance(T.self) else { return nil }
         return popToViewController(controller, animated: animated)
@@ -110,6 +114,7 @@ extension UINavigationController {
     /// - parameter animated: Set this value to true to animate the transition
     /// - parameter completion: Called after transition ends successfully
     /// - returns: the popped controller
+    @discardableResult
     public func popViewController(animated: Bool, completion: Action?) -> UIViewController? {
         guard let popped = self.popViewController(animated: animated) else { return nil }
         _сoordinator(animated, completion: completion)
@@ -122,6 +127,7 @@ extension UINavigationController {
     /// - parameter animated: Set this value to true to animate the transition
     /// - parameter completion: Called after transition ends successfully
     /// - returns: [UIViewCotnroller]? - returns the popped controllers
+    @discardableResult
     public func popToViewController(_ viewController: UIViewController, animated: Bool, completion: Action?) -> [UIViewController]? {
         guard let popped = popToViewController(viewController, animated: animated) else { return nil }
         _сoordinator(animated, completion: completion)
@@ -134,6 +140,7 @@ extension UINavigationController {
     /// - parameter animated: Set this value to true to animate the transition
     /// - parameter completion: Called after transition ends successfully
     /// - returns: [UIViewCotnroller]? - returns the popped controllers
+    @discardableResult
     public func popToViewController<T: UIViewController>(_ type: T.Type, animated: Bool, completion: Action?) -> [UIViewController]? {
         guard let popped = popToViewController(type, animated: animated) else { return nil }
         _сoordinator(animated, completion: completion)
@@ -145,6 +152,7 @@ extension UINavigationController {
     /// - parameter animated: Set this value to true to animate the transition
     /// - parameter completion: Called after transition ends successfully
     /// - returns: [UIViewCotnroller]? - returns the popped controllers
+    @discardableResult
     public func popToRootViewController(animated: Bool, completion: Action?) -> [UIViewController]? {
         guard let popped = self.popToRootViewController(animated: animated) else { return nil }
         _сoordinator(animated, completion: completion)
