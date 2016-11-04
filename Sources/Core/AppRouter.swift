@@ -24,6 +24,7 @@ public class AppRouter {
         }
     }
     
+    public init() {}
     
     /// Defines AppRouter output target
     public static var debugOutput: ARDebugOutputProtocol = DebugOutput.NSLog
