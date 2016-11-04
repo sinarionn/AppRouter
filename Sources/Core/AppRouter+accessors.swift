@@ -22,14 +22,14 @@ extension AppRouter {
     }
 }
 
-protocol ARToppestControllerProvider {
+public protocol ARToppestControllerProvider {
     func toppestControllerFromCurrent() -> UIViewController?
 }
 extension UIViewController : ARToppestControllerProvider {
     /// ARToppestControllerProvider implementation
     ///
     /// - returns: presentedViewController
-    func toppestControllerFromCurrent() -> UIViewController? {
+    open func toppestControllerFromCurrent() -> UIViewController? {
         return self.presentedViewController
     }
 }
@@ -37,7 +37,7 @@ extension UINavigationController {
     /// ARToppestControllerProvider implementation
     ///
     /// - returns: visibleViewController
-    override func toppestControllerFromCurrent() -> UIViewController? {
+    override open func toppestControllerFromCurrent() -> UIViewController? {
         return self.visibleViewController
     }
 }
@@ -45,7 +45,7 @@ extension UITabBarController {
     /// ARToppestControllerProvider implementation
     ///
     /// - returns: selectedViewController
-    override func toppestControllerFromCurrent() -> UIViewController? {
+    override open func toppestControllerFromCurrent() -> UIViewController? {
         return self.selectedViewController ?? presentedViewController
     }
 }
@@ -56,7 +56,7 @@ extension UITabBarController {
     ///
     /// - parameter type: Controller type
     /// - returns: one of viewControllers with specified type.
-    public func getControllerInstance<T: UIViewController>(type: T.Type) -> T?{
+    public func getControllerInstance<T: UIViewController>(_ type: T.Type) -> T?{
         for controller in self.viewControllers ?? [] {
             if let reqController = controller as? T {
                 return reqController
@@ -75,7 +75,7 @@ extension UINavigationController {
     ///
     /// - parameter type: Controller type
     /// - returns: one of viewControllers with specified type.
-    public func getControllerInstance<T: UIViewController>(type: T.Type) -> T?{
+    public func getControllerInstance<T: UIViewController>(_ type: T.Type) -> T?{
         for controller in self.viewControllers {
             if let reqController = controller as? T {
                 return reqController

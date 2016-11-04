@@ -24,11 +24,11 @@ class AppRouterNavigationsTests: XCTestCase {
         tabBar.viewControllers = [nav, second]
         
         XCTAssertTrue(tabBar.selectedViewController == nav)
-        XCTAssertTrue(tabBar.setSelectedViewController(AppRouterPresenterAdditionalController))
+        XCTAssertTrue(tabBar.setSelectedViewController(AppRouterPresenterAdditionalController.self))
         XCTAssertTrue(tabBar.selectedViewController == second)
-        XCTAssertTrue(tabBar.setSelectedViewController(AppRouterPresenterBaseController))
+        XCTAssertTrue(tabBar.setSelectedViewController(AppRouterPresenterBaseController.self))
         XCTAssertTrue(tabBar.selectedViewController == nav)
-        XCTAssertFalse(tabBar.setSelectedViewController(AppRouterPresenterTabBarController))
+        XCTAssertFalse(tabBar.setSelectedViewController(AppRouterPresenterTabBarController.self))
     }
     
     func testNavAccessors() {
@@ -38,8 +38,8 @@ class AppRouterNavigationsTests: XCTestCase {
         nav.viewControllers = [first, second]
         AppRouter.rootViewController = nav
         
-        let expectation =  expectationWithDescription("")
-        NSOperationQueue.mainQueue().addOperationWithBlock {
+        let expectation =  self.expectation(description: "")
+        OperationQueue.main.addOperation {
             guard let popped = nav.popToViewController(AppRouterPresenterBaseController.self, animated: false) else { return XCTFail() }
             XCTAssertTrue(popped.count == 1)
             XCTAssertNotNil(popped.first == second)
@@ -49,7 +49,7 @@ class AppRouterNavigationsTests: XCTestCase {
         XCTAssertTrue(nav.topViewController == second)
         XCTAssertNil(nav.popToViewController(AppRouterPresenterTabBarController.self, animated: false))
         
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testPopFromTop() {
@@ -60,12 +60,12 @@ class AppRouterNavigationsTests: XCTestCase {
         AppRouter.rootViewController = nav
 
         XCTAssertTrue(AppRouter.topViewController == second)
-        let expectation =  expectationWithDescription("")
+        let expectation =  self.expectation(description: "")
         AppRouter.popFromTopNavigation(animated: false, completion: {
             XCTAssertTrue(AppRouter.topViewController == first)
             expectation.fulfill()
         })
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testPopViewControllerAnimated() {
@@ -83,7 +83,7 @@ class AppRouterNavigationsTests: XCTestCase {
         XCTAssertNil(first.pop(animated: true, completion: { XCTFail() }))
         
         AppRouter.rootViewController = nav
-        let expectation =  expectationWithDescription("")
+        let expectation =  self.expectation(description: "")
         delay(0) {
             var popped : [UIViewController]? = []
             popped = second.pop(animated: true) {
@@ -93,7 +93,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testPopViewController() {
@@ -111,7 +111,7 @@ class AppRouterNavigationsTests: XCTestCase {
         XCTAssertNil(first.pop(animated: true, completion: { XCTFail() }))
         
         AppRouter.rootViewController = nav
-        let expectation =  expectationWithDescription("")
+        let expectation =  self.expectation(description: "")
         var popped : [UIViewController]? = []
         popped = second.pop(animated: false) {
             delay(0) {
@@ -121,7 +121,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testPopGenericViewControllerAnimated() {
@@ -134,7 +134,7 @@ class AppRouterNavigationsTests: XCTestCase {
         XCTAssertNil(nav.popToViewController(UITabBarController.self, animated: true, completion: { XCTFail() }))
         
         AppRouter.rootViewController = nav
-        let expectation =  expectationWithDescription("")
+        let expectation =  self.expectation(description: "")
         delay(0) {
             var popped : [UIViewController]? = []
             popped = nav.popToViewController(FirstController.self, animated: true) {
@@ -144,7 +144,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testPopGenericViewController() {
@@ -157,7 +157,7 @@ class AppRouterNavigationsTests: XCTestCase {
         XCTAssertNil(nav.popToViewController(UITabBarController.self, animated: false, completion: { XCTFail() }))
         
         AppRouter.rootViewController = nav
-        let expectation =  expectationWithDescription("")
+        let expectation =  self.expectation(description: "")
         var popped : [UIViewController]? = []
         popped = nav.popToViewController(FirstController.self, animated: false) {
             delay(0){
@@ -167,7 +167,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testPopToRootViewControllerAnimated() {
@@ -179,7 +179,7 @@ class AppRouterNavigationsTests: XCTestCase {
         nav.viewControllers = [first, second, third]
         
         AppRouter.rootViewController = nav
-        let expectation =  expectationWithDescription("")
+        let expectation =  self.expectation(description: "")
         delay(0) {
             var popped : [UIViewController]? = []
             popped = nav.popToRootViewController(animated: true) {
@@ -189,7 +189,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testPopToRootViewController() {
@@ -201,7 +201,7 @@ class AppRouterNavigationsTests: XCTestCase {
         nav.viewControllers = [first, second, third]
         AppRouter.rootViewController = nav
 
-        let expectation =  expectationWithDescription("")
+        let expectation =  self.expectation(description: "")
         var popped : [UIViewController]? = []
         popped = nav.popToRootViewController(animated: false) {
             delay(0){
@@ -211,7 +211,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 expectation.fulfill()
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testCloseViewControllerAnimated() {
@@ -222,9 +222,9 @@ class AppRouterNavigationsTests: XCTestCase {
         
         nav.viewControllers = [first, second]
         AppRouter.rootViewController = nav
-        second.presentViewController(third, animated: false, completion: nil)
+        second.present(third, animated: false, completion: nil)
 
-        let expectation = expectationWithDescription("")
+        let expectation = self.expectation(description: "")
         delay(0) {
             XCTAssertTrue(third.close(){
                 XCTAssertNil(third.presentingViewController)
@@ -235,7 +235,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 })
             })
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testCloseViewController() {
@@ -246,9 +246,9 @@ class AppRouterNavigationsTests: XCTestCase {
         
         nav.viewControllers = [first, second]
         AppRouter.rootViewController = nav
-        second.presentViewController(third, animated: false, completion: nil)
+        second.present(third, animated: false, completion: nil)
         
-        let expectation = expectationWithDescription("")
+        let expectation = self.expectation(description: "")
         delay(0) {
             XCTAssertTrue(third.close(animated: false){
                 XCTAssertNil(third.presentingViewController)
@@ -259,7 +259,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 })
             })
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testPushOnNavigationController() {
@@ -269,7 +269,7 @@ class AppRouterNavigationsTests: XCTestCase {
         
         nav.viewControllers = [first]
         AppRouter.rootViewController = nav
-        let expectation = expectationWithDescription("")
+        let expectation = self.expectation(description: "")
         
         delay(0) {
             nav.pushViewController(second, animated: false) {
@@ -282,7 +282,7 @@ class AppRouterNavigationsTests: XCTestCase {
                 }
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
     
     func testPushOnNavigationControllerAnimated() {
@@ -292,7 +292,7 @@ class AppRouterNavigationsTests: XCTestCase {
         
         nav.viewControllers = [first]
         AppRouter.rootViewController = nav
-        let expectation = expectationWithDescription("")
+        let expectation = self.expectation(description: "")
         
         delay(0) {
             nav.pushViewController(second, animated: true) {
@@ -305,17 +305,13 @@ class AppRouterNavigationsTests: XCTestCase {
                 }
             }
         }
-        waitForExpectationsWithTimeout(4, handler: nil)
+        waitForExpectations(timeout: 4, handler: nil)
     }
 
 }
 
-internal func delay(delay:Double, _ closure:()->()) {
-    dispatch_after(
-        dispatch_time(
-            DISPATCH_TIME_NOW,
-            Int64(delay * Double(NSEC_PER_SEC))
-        ),
-        dispatch_get_main_queue(), closure)
+internal func delay(_ delay:Double, _ closure:@escaping ()->()) {
+    DispatchQueue.main.asyncAfter(
+        deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
 }
     

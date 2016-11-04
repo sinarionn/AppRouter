@@ -30,26 +30,26 @@ class AppRouterPresenterTests: XCTestCase {
     
     func testPresenterUtilityTargetMethods() {
         let presenter = UIViewController.presenter()
-        presenter.onTop()
-        XCTAssertTrue(presenter.target.provideController(UIViewController) == baseController)
-        presenter.onRoot()
-        XCTAssertTrue(presenter.target.provideController(UIViewController) == tabBarController)
-        presenter.onCustom({ self.baseController })
-        XCTAssertTrue(presenter.target.provideController(UIViewController) == baseController)
+        _ = presenter.onTop()
+        XCTAssertTrue(presenter.target.provideController(UIViewController.self) == baseController)
+        _ = presenter.onRoot()
+        XCTAssertTrue(presenter.target.provideController(UIViewController.self) == tabBarController)
+        _ = presenter.onCustom({ self.baseController })
+        XCTAssertTrue(presenter.target.provideController(UIViewController.self) == baseController)
     }
     
     func testPresenterUtilitySourceMethods() {
         let presenter = AppRouterPresenterAdditionalController.presenter()
-        presenter.fromXib()
-        XCTAssertNotNil(presenter.source.provideController(AppRouterPresenterAdditionalController))
-        presenter.fromXib("AppRouterPresenterAdditionalController")
-        XCTAssertNotNil(presenter.source.provideController(AppRouterPresenterAdditionalController))
-        presenter.fromStoryboard("AppRouterPresenterControllers", initial: false)
-        XCTAssertNotNil(presenter.source.provideController(AppRouterPresenterAdditionalController))
+        _ = presenter.fromXib()
+        XCTAssertNotNil(presenter.source.provideController(AppRouterPresenterAdditionalController.self))
+        _ = presenter.fromXib("AppRouterPresenterAdditionalController")
+        XCTAssertNotNil(presenter.source.provideController(AppRouterPresenterAdditionalController.self))
+        _ = presenter.fromStoryboard("AppRouterPresenterControllers", initial: false)
+        XCTAssertNotNil(presenter.source.provideController(AppRouterPresenterAdditionalController.self))
         
         let initialPresenter = StoryboardWithInitialViewController.presenter()
-        initialPresenter.fromStoryboard()
-        XCTAssertNotNil(initialPresenter.source.provideController(StoryboardWithInitialViewController))
+        _ = initialPresenter.fromStoryboard()
+        XCTAssertNotNil(initialPresenter.source.provideController(StoryboardWithInitialViewController.self))
     }
     
     func testPresenterUtilityConfigurationMethods() {
@@ -57,7 +57,7 @@ class AppRouterPresenterTests: XCTestCase {
         guard let base = baseController else { return XCTFail() }
         presenter.configurator(base)
         XCTAssertFalse(base.initialized)
-        presenter.configure({ $0.initialized = true })
+        _ = presenter.configure({ $0.initialized = true })
         presenter.configurator(base)
         XCTAssertTrue(base.initialized)
     }
@@ -66,7 +66,7 @@ class AppRouterPresenterTests: XCTestCase {
         let presenter = AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers")
         guard let base = baseController else { return XCTFail() }
         XCTAssertFalse(base.initialized)
-        presenter.configure({ $0.initialized = true })
+        _ = presenter.configure({ $0.initialized = true })
         let source = presenter.provideSourceController()
         XCTAssertTrue(source?.initialized == true)
     }
@@ -76,7 +76,7 @@ class AppRouterPresenterTests: XCTestCase {
         let nav = UINavigationController()
         guard let base = baseController else { return XCTFail() }
         XCTAssertFalse(base.initialized)
-        presenter.configure({
+        _ = presenter.configure({
             $0.initialized = true
             $0.navigationController?.title = "TestTitle"
         }).embedInNavigation(nav)
@@ -91,24 +91,24 @@ class AppRouterPresenterTests: XCTestCase {
     func testPresenterUtilityEmbeddingMethods() {
         let presenter = AppRouterPresenterAdditionalController.presenter()
         let controller = AppRouterPresenterAdditionalController()
-        presenter.embedInNavigation()
+        _ = presenter.embedInNavigation()
         guard let navigation = presenter.embedder(controller) as? UINavigationController else { return XCTFail() }
         XCTAssertTrue(navigation.topViewController == controller)
         
         guard let customNavigation = navController else { return XCTFail() }
-        presenter.embedInNavigation(customNavigation)
+        _ = presenter.embedInNavigation(customNavigation)
         guard let embeddedCustom = presenter.embedder(controller) as? UINavigationController else { return XCTFail() }
         XCTAssertTrue(embeddedCustom is AppRouterPresenterNavigationController)
         XCTAssertTrue(embeddedCustom.topViewController == controller)
         
         
         guard let customTabBar = tabBarController else { return XCTFail() }
-        presenter.embedInTabBar(customTabBar)
+        _ = presenter.embedInTabBar(customTabBar)
         guard let embeddedCustomTabBar = presenter.embedder(controller) as? UITabBarController else { return XCTFail() }
         XCTAssertTrue(embeddedCustomTabBar is AppRouterPresenterTabBarController)
         XCTAssertTrue(embeddedCustomTabBar.viewControllers?.last == controller)
         
-        presenter.embedIn({ $0 })
+        _ = presenter.embedIn({ $0 })
         XCTAssertTrue(presenter.embedder(controller) == controller)
         
         let customPresenter = AppRouterPresenterAdditionalController.presenter()

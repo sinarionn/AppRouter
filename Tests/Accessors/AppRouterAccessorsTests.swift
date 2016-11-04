@@ -28,12 +28,12 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertTrue(AppRouter.rootViewController is AppRouterPresenterTabBarController)
         XCTAssertTrue(AppRouter.topViewController is AppRouterPresenterAdditionalController)
         
-        AppRouter.topViewController?.presentViewController(AppRouterPresenterBaseController(), animated: false, completion: nil)
+        AppRouter.topViewController?.present(AppRouterPresenterBaseController(), animated: false, completion: nil)
         XCTAssertTrue(AppRouter.rootViewController is AppRouterPresenterTabBarController)
         XCTAssertTrue(AppRouter.topViewController is AppRouterPresenterBaseController)
         
         AppRouter.rootViewController = AppRouterPresenterBaseController()
-        AppRouter.topViewController?.presentViewController(AppRouterPresenterAdditionalController(), animated: false, completion: nil)
+        AppRouter.topViewController?.present(AppRouterPresenterAdditionalController(), animated: false, completion: nil)
         XCTAssertTrue(AppRouter.rootViewController is AppRouterPresenterBaseController)
         XCTAssertTrue(AppRouter.topViewController is AppRouterPresenterAdditionalController)        
     }
@@ -46,10 +46,10 @@ class AppRouterAccessorsTests: XCTestCase {
         nav.viewControllers = [first]
         tabBar.viewControllers = [nav, second]
         
-        XCTAssertNotNil( tabBar.getControllerInstance(NavigationControllerWithExpectations) )
-        XCTAssertNotNil( tabBar.getControllerInstance(AppRouterPresenterBaseController) )
-        XCTAssertNotNil( tabBar.getControllerInstance(AppRouterPresenterAdditionalController) )
-        XCTAssertNil( tabBar.getControllerInstance(AppRouterPresenterTabBarController) )
+        XCTAssertNotNil( tabBar.getControllerInstance(NavigationControllerWithExpectations.self) )
+        XCTAssertNotNil( tabBar.getControllerInstance(AppRouterPresenterBaseController.self) )
+        XCTAssertNotNil( tabBar.getControllerInstance(AppRouterPresenterAdditionalController.self) )
+        XCTAssertNil( tabBar.getControllerInstance(AppRouterPresenterTabBarController.self) )
     }
     
     func testNavAccessors() {
@@ -59,9 +59,9 @@ class AppRouterAccessorsTests: XCTestCase {
         nav.viewControllers = [first, second]
         AppRouter.rootViewController = nav
         
-        XCTAssertNotNil( nav.getControllerInstance(AppRouterPresenterBaseController) )
-        XCTAssertNotNil( nav.getControllerInstance(AppRouterPresenterAdditionalController) )
-        XCTAssertNil( nav.getControllerInstance(AppRouterPresenterTabBarController) )
+        XCTAssertNotNil( nav.getControllerInstance(AppRouterPresenterBaseController.self) )
+        XCTAssertNotNil( nav.getControllerInstance(AppRouterPresenterAdditionalController.self) )
+        XCTAssertNil( nav.getControllerInstance(AppRouterPresenterTabBarController.self) )
     }
     
     func testModalFlagAccessor() {
@@ -73,14 +73,14 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertFalse(first.isModal)
         XCTAssertFalse(second.isModal)
         XCTAssertFalse(nav.isModal)
-        let expectation =  expectationWithDescription("")
-        nav.presentViewController(second, animated: false, completion: { _ in
+        let expectation =  self.expectation(description: "")
+        nav.present(second, animated: false, completion: { _ in
             XCTAssertTrue(second.isModal)
             XCTAssertFalse(first.isModal)
             XCTAssertFalse(nav.isModal)
             expectation.fulfill()
         })
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testModalFlagAccessorWhenEmbeddedInNavigation() {
@@ -93,14 +93,14 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertFalse(first.isModal)
         XCTAssertFalse(second.isModal)
         XCTAssertFalse(nav.isModal)
-        let expectation =  expectationWithDescription("")
-        second.presentViewController(nav, animated: false, completion: { _ in
+        let expectation =  self.expectation(description: "")
+        second.present(nav, animated: false, completion: { _ in
             XCTAssertTrue(first.isModal)
             XCTAssertTrue(nav.isModal)
             XCTAssertFalse(second.isModal)
             expectation.fulfill()
         })
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testModalFlagAccessorWhenEmbeddedInNavigationAndInsideTabBar() {
@@ -117,14 +117,14 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertFalse(second.isModal)
         XCTAssertFalse(nav.isModal)
         
-        let expectation =  expectationWithDescription("")
-        second.presentViewController(nav, animated: false, completion: { _ in
+        let expectation =  self.expectation(description: "")
+        second.present(nav, animated: false, completion: { _ in
             XCTAssertTrue(first.isModal)
             XCTAssertTrue(nav.isModal)
             XCTAssertFalse(second.isModal)
             expectation.fulfill()
         })
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testTopViewControllerWithCustomContainer() {
@@ -137,7 +137,7 @@ class AppRouterAccessorsTests: XCTestCase {
         let nav = UINavigationController()
         AppRouter.rootViewController = nav
         XCTAssertTrue(AppRouter.topViewController == nav)
-        nav.presentViewController(FirstController(), animated: false, completion: nil)
+        nav.present(FirstController(), animated: false, completion: nil)
         XCTAssertTrue(AppRouter.topViewController is FirstController)
     }
     
@@ -145,13 +145,13 @@ class AppRouterAccessorsTests: XCTestCase {
         let tab = UITabBarController()
         AppRouter.rootViewController = tab
         XCTAssertTrue(AppRouter.topViewController == tab)
-        tab.presentViewController(FirstController(), animated: false, completion: nil)
+        tab.present(FirstController(), animated: false, completion: nil)
         XCTAssertTrue(AppRouter.topViewController is FirstController)
     }
 }
 
 extension SecondController {
-    override func toppestControllerFromCurrent() -> UIViewController? {
+    override open func toppestControllerFromCurrent() -> UIViewController? {
         return ThirdController()
     }
 }

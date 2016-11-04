@@ -33,7 +33,7 @@ test-carthage:
 	ls Carthage/build/iOS/AppRouter.framework
 
 test-coverage:
-	  set -o pipefail && xcodebuild -project AppRouter.xcodeproj -scheme AppRouter -destination 'platform=iOS Simulator,name=iPhone 6,OS=8.1' -enableCodeCoverage YES test | xcpretty -ct
+	  set -o pipefail && xcodebuild -project AppRouter.xcodeproj -scheme AppRouter -destination 'platform=iOS Simulator,name=iPhone 6s,OS=10.0' -enableCodeCoverage YES test | xcpretty -ct
 		bash <(curl -s https://codecov.io/bash)
 
 test-cocoapods:

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0](https://github.com/MLSDev/AppRouter/releases/tag/2.0.0)
+
+Swift 3 Release. Xcode 8 required.
+
+
 ## [1.0.2](https://github.com/MLSDev/AppRouter/releases/tag/1.0.2)
 
 ## Bug fixes

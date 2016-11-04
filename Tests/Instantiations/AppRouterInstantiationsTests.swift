@@ -13,36 +13,36 @@ class AppRouterInstantiationsTests: XCTestCase {
 
     func testInstantiateFromStoryboardWithStoryboardName() {
         let controller = AppRouterInstantiationsTestsViewController.instantiate(storyboardName: "AppRouterInstantiationsTests")!
-        controller.viewDidLoadExpectation = expectationWithDescription("viewDidLoad should be called")
+        controller.viewDidLoadExpectation = expectation(description: "viewDidLoad should be called")
         _ = controller.view
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testInstantiateFromStoryboardWithDefaultParameters() {
         let controller = StoryboardWithInitialViewController.instantiate()!
-        controller.viewDidLoadExpectation = expectationWithDescription("viewDidLoad should be called")
+        controller.viewDidLoadExpectation = expectation(description: "viewDidLoad should be called")
         _ = controller.view
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testInstantiateFromStoryboardWithInitialParameter() {
         let controller = StoryboardWithInitialViewController.instantiate(initial: true)!
-        controller.viewDidLoadExpectation = expectationWithDescription("viewDidLoad should be called")
+        controller.viewDidLoadExpectation = expectation(description: "viewDidLoad should be called")
         _ = controller.view
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testInstantiateFromStoryboardInitialSkippingNavigation() {
         let controller = StoryboardWithInitialNavigationViewController.instantiate(initial: true)!
-        controller.viewDidLoadExpectation = expectationWithDescription("viewDidLoad should be called")
+        controller.viewDidLoadExpectation = expectation(description: "viewDidLoad should be called")
         _ = controller.view
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
     
     func testInstantiateFromXib() {
         let controller = XibWithViewController.instantiateFromXib()
-        controller?.viewDidLoadExpectation = expectationWithDescription("viewDidLoad should be called")
+        controller?.viewDidLoadExpectation = expectation(description: "viewDidLoad should be called")
         _ = controller?.view
-        waitForExpectationsWithTimeout(1, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 }

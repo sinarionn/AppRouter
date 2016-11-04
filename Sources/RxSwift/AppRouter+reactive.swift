@@ -16,7 +16,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// Observe viewDidLoad calls on current instance
     func onViewDidLoad() -> Observable<Void> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.didLoad.subscribeNext({ [weak self] vc in
+            return ARViewControllerLifeCircleManager.instance.didLoad.subscribe(onNext: { [weak self] vc in
                 if vc === self {
                     observer.onNext()
                 }
@@ -27,7 +27,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// Observe viewWillAppear calls on current instance
     func onViewWillAppear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.willAppear.subscribeNext({ [weak self] (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.willAppear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
                     observer.onNext(animated)
                 }
@@ -38,7 +38,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// Observe viewDidAppear calls on current instance
     func onViewDidAppear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.didAppear.subscribeNext({ [weak self] (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.didAppear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
                     observer.onNext(animated)
                 }
@@ -49,7 +49,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// Observe viewWillDisappear calls on current instance
     func onViewWillDisappear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.willDisappear.subscribeNext({ [weak self] (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.willDisappear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
                     observer.onNext(animated)
                 }
@@ -60,7 +60,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// Observe viewDidDisappear calls on current instance
     func onViewDidDisappear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.didDisappear.subscribeNext({ [weak self] (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.didDisappear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
                     observer.onNext(animated)
                 }
@@ -73,7 +73,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// observe viewDidLoad calls on all instances of current type
     static func onViewDidLoad() -> Observable<Self> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.didLoad.subscribeNext({ vc in
+            return ARViewControllerLifeCircleManager.instance.didLoad.subscribe(onNext: { vc in
                 if let required = vc as? Self {
                     observer.onNext(required)
                 }
@@ -84,7 +84,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// observe viewWillAppear calls on all instances of current type
     static func onViewWillAppear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.willAppear.subscribeNext({ (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.willAppear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
                     observer.onNext((required, animated))
                 }
@@ -95,7 +95,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// observe viewDidAppear calls on all instances of current type
     static func onViewDidAppear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.didAppear.subscribeNext({ (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.didAppear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
                     observer.onNext((required, animated))
                 }
@@ -106,7 +106,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// observe viewWillDisappear calls on all instances of current type
     static func onViewWillDisappear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.willDisappear.subscribeNext({ (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.willDisappear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
                     observer.onNext((required, animated))
                 }
@@ -117,7 +117,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     /// observe viewDidDisappear calls on all instances of current type
     static func onViewDidDisappear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCircleManager.instance.didDisappear.subscribeNext({ (vc, animated) in
+            return ARViewControllerLifeCircleManager.instance.didDisappear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
                     observer.onNext((required, animated))
                 }
@@ -127,58 +127,59 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
 }
 
 private class ARViewControllerLifeCircleManager {
-    static let instance : ARViewControllerLifeCircleManager = {
-        ARViewControllerLifeCircleManager.swizzleUIViewController()
-        return ARViewControllerLifeCircleManager()
-    }()
-    private let didLoad = PublishSubject<UIViewController>()
-    private let willAppear = PublishSubject<(controller: UIViewController,animated: Bool)>()
-    private let didAppear = PublishSubject<(controller: UIViewController,animated: Bool)>()
-    private let willDisappear = PublishSubject<(controller: UIViewController,animated: Bool)>()
-    private let didDisappear = PublishSubject<(controller: UIViewController,animated: Bool)>()
-    
-    class func swizzleUIViewController() {
-        struct Static { static var token: dispatch_once_t = 0 }
-        dispatch_once(&Static.token) {
+    private static var __once: () = {
             swizzleUIViewControllerDidLoad()
             swizzleUIViewControllerWillAppear()
             swizzleUIViewControllerDidAppear()
             swizzleUIViewControllerWillDisappear()
             swizzleUIViewControllerDidDisappear()
-        }
+        }()
+    static let instance : ARViewControllerLifeCircleManager = {
+        ARViewControllerLifeCircleManager.swizzleUIViewController()
+        return ARViewControllerLifeCircleManager()
+    }()
+    fileprivate let didLoad = PublishSubject<UIViewController>()
+    fileprivate let willAppear = PublishSubject<(controller: UIViewController,animated: Bool)>()
+    fileprivate let didAppear = PublishSubject<(controller: UIViewController,animated: Bool)>()
+    fileprivate let willDisappear = PublishSubject<(controller: UIViewController,animated: Bool)>()
+    fileprivate let didDisappear = PublishSubject<(controller: UIViewController,animated: Bool)>()
+    
+    class func swizzleUIViewController() {
+        struct Static { static var token: Int = 0 }
+        _ = ARViewControllerLifeCircleManager.__once
     }
     
-    private class func swizzleUIViewControllerDidLoad() {
+    fileprivate class func swizzleUIViewControllerDidLoad() {
         let originalSelector = #selector(UIViewController.viewDidLoad)
         let swizzledSelector = #selector(UIViewController.ar_viewDidLoad)
         swapMethods(originalSelector, swizzled: swizzledSelector)
     }
     
-    private class func swizzleUIViewControllerWillAppear() {
+    fileprivate class func swizzleUIViewControllerWillAppear() {
         let originalSelector = #selector(UIViewController.viewWillAppear(_:))
         let swizzledSelector = #selector(UIViewController.ar_viewWillAppear(_:))
         swapMethods(originalSelector, swizzled: swizzledSelector)
     }
     
-    private class func swizzleUIViewControllerDidAppear() {
+    fileprivate class func swizzleUIViewControllerDidAppear() {
         let originalSelector = #selector(UIViewController.viewDidAppear(_:))
         let swizzledSelector = #selector(UIViewController.ar_viewDidAppear(_:))
         swapMethods(originalSelector, swizzled: swizzledSelector)
     }
     
-    private class func swizzleUIViewControllerWillDisappear() {
+    fileprivate class func swizzleUIViewControllerWillDisappear() {
         let originalSelector = #selector(UIViewController.viewWillDisappear(_:))
         let swizzledSelector = #selector(UIViewController.ar_viewWillDisappear(_:))
         swapMethods(originalSelector, swizzled: swizzledSelector)
     }
     
-    private class func swizzleUIViewControllerDidDisappear() {
+    fileprivate class func swizzleUIViewControllerDidDisappear() {
         let originalSelector = #selector(UIViewController.viewDidDisappear(_:))
         let swizzledSelector = #selector(UIViewController.ar_viewDidDisappear(_:))
         swapMethods(originalSelector, swizzled: swizzledSelector)
     }
     
-    private class func swapMethods(original: Selector, swizzled: Selector) {
+    fileprivate class func swapMethods(_ original: Selector, swizzled: Selector) {
         let originalMethod = class_getInstanceMethod(UIViewController.self, original)
         let swizzledMethod = class_getInstanceMethod(UIViewController.self, swizzled)
         let didAddMethod = class_addMethod(UIViewController.self, original, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))
@@ -188,23 +189,23 @@ private class ARViewControllerLifeCircleManager {
 }
 
 extension UIViewController {
-    @objc private func ar_viewDidLoad() -> () {
+    @objc fileprivate func ar_viewDidLoad() -> () {
         self.ar_viewDidLoad()
         ARViewControllerLifeCircleManager.instance.didLoad.onNext(self)
     }
-    @objc private func ar_viewWillAppear(animated: Bool) -> () {
+    @objc fileprivate func ar_viewWillAppear(_ animated: Bool) -> () {
         self.ar_viewWillAppear(animated)
         ARViewControllerLifeCircleManager.instance.willAppear.onNext((self, animated))
     }
-    @objc private func ar_viewDidAppear(animated: Bool) -> () {
+    @objc fileprivate func ar_viewDidAppear(_ animated: Bool) -> () {
         self.ar_viewDidAppear(animated)
         ARViewControllerLifeCircleManager.instance.didAppear.onNext((self, animated: animated))
     }
-    @objc private func ar_viewWillDisappear(animated: Bool) -> () {
+    @objc fileprivate func ar_viewWillDisappear(_ animated: Bool) -> () {
         self.ar_viewWillDisappear(animated)
         ARViewControllerLifeCircleManager.instance.willDisappear.onNext((self, animated: animated))
     }
-    @objc private func ar_viewDidDisappear(animated: Bool) -> () {
+    @objc fileprivate func ar_viewDidDisappear(_ animated: Bool) -> () {
         self.ar_viewDidDisappear(animated)
         ARViewControllerLifeCircleManager.instance.didDisappear.onNext((self, animated: animated))
     }

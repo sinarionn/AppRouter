@@ -11,7 +11,7 @@ Extremely easy way to handle controller creation / presentation / navigation and
 ## Requirements
 
 - iOS 8.0+
-- Xcode 7.3+
+- Xcode 8+
 
 ## Installation
 
@@ -40,7 +40,7 @@ github "MLSDev/AppRouter"
 Imagine that you want to present some controller and for this you need other controller to present on. Usual way forces us to pass controller through weak properties or to use delegation mechanic. We can avoid this situation and just call:
 
 ```swift
-AppRouter.topViewController?.presentViewController(newOne, animated: true, completion: nil)
+AppRouter.topViewController?.present(newOne, animated: true, completion: nil)
 ```  
 or even
 ```swift
