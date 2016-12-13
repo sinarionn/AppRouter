@@ -23,7 +23,7 @@ extension AppRouter {
 }
 
 public protocol ARToppestControllerProvider {
-    public func toppestControllerFromCurrent() -> UIViewController?
+    func toppestControllerFromCurrent() -> UIViewController?
 }
 extension UIViewController : ARToppestControllerProvider {
     /// ARToppestControllerProvider implementation
