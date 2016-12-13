@@ -22,14 +22,14 @@ extension AppRouter {
     }
 }
 
-protocol ARToppestControllerProvider {
-    func toppestControllerFromCurrent() -> UIViewController?
+public protocol ARToppestControllerProvider {
+    public func toppestControllerFromCurrent() -> UIViewController?
 }
 extension UIViewController : ARToppestControllerProvider {
     /// ARToppestControllerProvider implementation
     ///
     /// - returns: presentedViewController
-    func toppestControllerFromCurrent() -> UIViewController? {
+    public func toppestControllerFromCurrent() -> UIViewController? {
         return self.presentedViewController
     }
 }
@@ -37,7 +37,7 @@ extension UINavigationController {
     /// ARToppestControllerProvider implementation
     ///
     /// - returns: visibleViewController
-    override func toppestControllerFromCurrent() -> UIViewController? {
+    override public func toppestControllerFromCurrent() -> UIViewController? {
         return self.visibleViewController
     }
 }
@@ -45,7 +45,7 @@ extension UITabBarController {
     /// ARToppestControllerProvider implementation
     ///
     /// - returns: selectedViewController
-    override func toppestControllerFromCurrent() -> UIViewController? {
+    override public func toppestControllerFromCurrent() -> UIViewController? {
         return self.selectedViewController ?? presentedViewController
     }
 }
