@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 import RxSwift
 
-protocol ARReactiveProxyProtocol {}
+public protocol ARReactiveProxyProtocol {}
 extension UIViewController : ARReactiveProxyProtocol {}
-extension ARReactiveProxyProtocol where Self: UIViewController {
+public extension ARReactiveProxyProtocol where Self: UIViewController {
     /// Observe viewDidLoad calls on current instance
-    func onViewDidLoad() -> Observable<Void> {
+    public func onViewDidLoad() -> Observable<Void> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.didLoad.subscribe(onNext: { [weak self] vc in
                 if vc === self {
@@ -25,7 +25,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// Observe viewWillAppear calls on current instance
-    func onViewWillAppear() -> Observable<Bool> {
+    public func onViewWillAppear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.willAppear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
@@ -36,7 +36,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// Observe viewDidAppear calls on current instance
-    func onViewDidAppear() -> Observable<Bool> {
+    public func onViewDidAppear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.didAppear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
@@ -47,7 +47,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// Observe viewWillDisappear calls on current instance
-    func onViewWillDisappear() -> Observable<Bool> {
+    public func onViewWillDisappear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.willDisappear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
@@ -58,7 +58,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// Observe viewDidDisappear calls on current instance
-    func onViewDidDisappear() -> Observable<Bool> {
+    public func onViewDidDisappear() -> Observable<Bool> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.didDisappear.subscribe(onNext: { [weak self] (vc, animated) in
                 if vc === self {
@@ -69,9 +69,9 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
 }
 
-extension ARReactiveProxyProtocol where Self: UIViewController {
+public extension ARReactiveProxyProtocol where Self: UIViewController {
     /// observe viewDidLoad calls on all instances of current type
-    static func onViewDidLoad() -> Observable<Self> {
+    public static func onViewDidLoad() -> Observable<Self> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.didLoad.subscribe(onNext: { vc in
                 if let required = vc as? Self {
@@ -82,7 +82,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// observe viewWillAppear calls on all instances of current type
-    static func onViewWillAppear() -> Observable<(controller: Self, animated: Bool)> {
+    public static func onViewWillAppear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.willAppear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
@@ -93,7 +93,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// observe viewDidAppear calls on all instances of current type
-    static func onViewDidAppear() -> Observable<(controller: Self, animated: Bool)> {
+    public static func onViewDidAppear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.didAppear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
@@ -104,7 +104,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// observe viewWillDisappear calls on all instances of current type
-    static func onViewWillDisappear() -> Observable<(controller: Self, animated: Bool)> {
+    public static func onViewWillDisappear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.willDisappear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
@@ -115,7 +115,7 @@ extension ARReactiveProxyProtocol where Self: UIViewController {
     }
     
     /// observe viewDidDisappear calls on all instances of current type
-    static func onViewDidDisappear() -> Observable<(controller: Self, animated: Bool)> {
+    public static func onViewDidDisappear() -> Observable<(controller: Self, animated: Bool)> {
         return Observable.create({ observer -> Disposable in
             return ARViewControllerLifeCircleManager.instance.didDisappear.subscribe(onNext: { (vc, animated) in
                 if let required = vc as? Self {
