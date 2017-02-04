@@ -2,13 +2,9 @@ matrix:
   include:
     - os: osx
       env: ACTION=iOS
-    # - os: osx
-    #  env: ACTION=carthage
     - os: osx
       env: ACTION=coverage
-    # - os: osx
-    #   env: ACTION=cocoapods
-
+    
 language: objective-c
 osx_image: xcode8
 

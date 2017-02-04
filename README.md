@@ -12,6 +12,7 @@ Extremely easy way to handle controller creation / presentation / navigation and
 
 - iOS 8.0+
 - Xcode 8+
+- Swift 3
 
 ## Installation
 
@@ -85,7 +86,7 @@ extension AppRouter {
 }
 ```
 
-**Note:** framework by default uses name of your UIViewController subclass as storyboard identifier to find viewController in storyboard (using String(controllerType))
+**Note:** framework by default uses name of your UIViewController subclass (String(describing: controllerType)) as storyboard identifier and initial controller (or rootViewController on initial UINavigationController)
 
 #### Completion handlers
 
@@ -114,15 +115,15 @@ And thats it. Method will try to detect the proper way to make controller gone.
 If you want some easy way to deal with controller lifecycle outside - try to use AppRouter/RxSwift subspec. It provides a bunch of Type and Instance observables around lifecycle methods (it uses swizzling underneath from the moment you subscribe) :
 
 ```swift
-instance.onViewDidLoad() -> Observable<Void>
-instance.onViewWillAppear() -> Observable<Bool>
-instance.onViewDidAppear() -> Observable<Bool>
-instance.onViewWillDisappear() -> Observable<Bool>
-instance.onViewDidDisappear() -> Observable<Bool>
+instance.rx.onViewDidLoad() -> Observable<Void>
+instance.rx.onViewWillAppear() -> Observable<Bool>
+instance.rx.onViewDidAppear() -> Observable<Bool>
+instance.rx.onViewWillDisappear() -> Observable<Bool>
+instance.rx.onViewDidDisappear() -> Observable<Bool>
 
-Type.onViewDidLoad() -> Observable<Type>
-Type.onViewWillAppear() -> Observable<(controller: Type, animated: Bool)>
-Type.onViewDidAppear() -> Observable<(controller: Type, animated: Bool)>
-Type.onViewWillDisappear() -> Observable<(controller: Type, animated: Bool)>
-Type.onViewDidDisappear() -> Observable<(controller: Type, animated: Bool)>
+Type.rx.onViewDidLoad() -> Observable<Type>
+Type.rx.onViewWillAppear() -> Observable<(controller: Type, animated: Bool)>
+Type.rx.onViewDidAppear() -> Observable<(controller: Type, animated: Bool)>
+Type.rx.onViewWillDisappear() -> Observable<(controller: Type, animated: Bool)>
+Type.rx.onViewDidDisappear() -> Observable<(controller: Type, animated: Bool)>
 ```

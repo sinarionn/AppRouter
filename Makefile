@@ -2,42 +2,23 @@ SHELL := /bin/bash
 # Install Tasks
 
 install-iOS:
-	true
+	xcrun instruments -w "iPhone 6s (10.2)" || true
 
 install-carthage:
-	brew rm carthage || true
+	brew remove carthage --force || true
 	brew install carthage
 
-install-coverage:
-	true
-
 install-cocoapods:
-	true
+	gem install cocoapods --pre --no-rdoc --no-ri --no-document --quiet
 
-# install-oss-osx:
-# 	sh swiftenv-install.sh
-
-# Run Tasks
 
 test-iOS:
-	set -o pipefail && \
-		xcodebuild \
-		-project AppRouter.xcodeproj \
-		-scheme AppRouter \
-		-destination "name=iPhone 6s" \
-		clean test \
-		| xcpretty -ct
+	set -o pipefail && xcodebuild -project AppRouter.xcodeproj -scheme AppRouter -destination 'name=iPhone 6s' -enableCodeCoverage YES test -configuration "Release" | xcpretty -ct
+	bash <(curl -s https://codecov.io/bash)
 
 test-carthage:
 	carthage build --no-skip-current --platform iOS
 	ls Carthage/build/iOS/AppRouter.framework
 
-test-coverage:
-	  set -o pipefail && xcodebuild -project AppRouter.xcodeproj -scheme AppRouter -destination 'platform=iOS Simulator,name=iPhone 6s,OS=10.0' -enableCodeCoverage YES test | xcpretty -ct
-		bash <(curl -s https://codecov.io/bash)
-
 test-cocoapods:
 	pod lib lint AppRouter.podspec --verbose
-
-# test-oss-osx:
-# 	. ~/.swiftenv/init && swift build

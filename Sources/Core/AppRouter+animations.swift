@@ -10,7 +10,7 @@ extension AppRouter {
         /// - parameter options: animation options used to animate transition.
         /// - parameter duration: animation duration
         /// - parameter callback: called after controller becomes rootViewController
-        public static func setRootWithViewAnimation(_ controller: UIViewController, options: UIViewAnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: ((Bool)->())? = nil) {
+        public static func setRootWithViewAnimation(_ controller: UIViewController, options: UIViewAnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: Func<Bool, Void>? = nil) {
             if let rootController = AppRouter.rootViewController {
                 let oldState = UIView.areAnimationsEnabled
                 UIView.setAnimationsEnabled(false)
@@ -31,7 +31,7 @@ extension AppRouter {
         /// - parameter options: animation options used to animate transition.
         /// - parameter duration: animation duration
         /// - parameter callback: called after controller becomes rootViewController
-        public static func setRootWithWindowAnimation(_ controller: UIViewController, options: UIViewAnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: ((Bool)->())? = nil) {
+        public static func setRootWithWindowAnimation(_ controller: UIViewController, options: UIViewAnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: Func<Bool, Void>? = nil) {
             if let _ = AppRouter.rootViewController {
                 let oldState = UIView.areAnimationsEnabled
                 UIView.setAnimationsEnabled(false)
@@ -54,7 +54,7 @@ extension AppRouter {
         /// - parameter opacityTo: final snapshot opacity
         /// - parameter duration: animation duration
         /// - parameter callback: called after controller becomes rootViewController
-        public static func setRootWithSnapshotAnimation(_ controller: UIViewController, upscaleTo: CGFloat = 1.2, opacityTo: Float = 0, duration: TimeInterval = 0.3, callback: ((Bool)->())? = nil) {
+        public static func setRootWithSnapshotAnimation(_ controller: UIViewController, upscaleTo: CGFloat = 1.2, opacityTo: Float = 0, duration: TimeInterval = 0.3, callback: Func<Bool, Void>? = nil) {
             if let _ = AppRouter.rootViewController, let snapshot:UIView = AppRouter.window.snapshotView(afterScreenUpdates: true) {
                 controller.view.addSubview(snapshot)
                 AppRouter.rootViewController = controller

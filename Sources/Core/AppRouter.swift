@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 
 public typealias Action = ()->()
+public typealias Func<T, U> = (T) -> U
 
 /// Namespacing class 
 open class AppRouter {

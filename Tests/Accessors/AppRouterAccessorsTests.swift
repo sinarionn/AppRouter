@@ -24,7 +24,7 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertTrue(AppRouter.rootViewController is AppRouterPresenterTabBarController)
         XCTAssertTrue(AppRouter.topViewController is AppRouterPresenterNavigationController)
         
-        AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers").push(animated: false)
+        AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).push(animated: false)
         XCTAssertTrue(AppRouter.rootViewController is AppRouterPresenterTabBarController)
         XCTAssertTrue(AppRouter.topViewController is AppRouterPresenterAdditionalController)
         

@@ -7,7 +7,7 @@ open class ViewControllerPresentConfiguration<T: UIViewController> {
     open var target : ARControllerProvider = ARPresentationTarget.top
     
     /// Provides controller which will be configured, embedded and presented
-    open var source : ARControllerProvider = ARPresentationSource.storyboard(false)
+    open var source : ARControllerProvider = ARPresentationSource.storyboard(initial: true)
     
     /// Embeds source inside container (UINavigationController, UITabBarController, etc) which will be used for presentation
     open var embedder : (T) -> UIViewController? = { $0 }
@@ -39,9 +39,9 @@ open class ViewControllerPresentConfiguration<T: UIViewController> {
     ///
     /// - parameter name: Storyboard name. Default value: controller type
     /// - parameter initial: Set this value if controller is initial in storyboard or it's rootController on initial UINavigationController
-    open func fromStoryboard(_ name: String? = nil, initial : Bool = false) -> ViewControllerPresentConfiguration {
-        if let name = name { source = ARPresentationSource.customStoryboard(name, initial) }
-        else { source = ARPresentationSource.storyboard(initial) }
+    open func fromStoryboard(_ name: String? = nil, initial : Bool = true) -> ViewControllerPresentConfiguration {
+        if let name = name { source = ARPresentationSource.customStoryboard(name: name, inital: initial) }
+        else { source = ARPresentationSource.storyboard(initial: initial) }
         return self
     }
     
@@ -166,9 +166,9 @@ enum ARPresentationTarget : ARControllerProvider{
 }
 
 enum ARPresentationSource : ARControllerProvider {
-    case storyboard(Bool)
+    case storyboard(initial: Bool)
     case xib
-    case customStoryboard(String, Bool)
+    case customStoryboard(name: String, inital: Bool)
     case customXib(String)
     case preconstructed(UIViewController)
     func provideController<T : UIViewController>(_ type: T.Type) -> T? where T : BundleForClassInstantiable {
