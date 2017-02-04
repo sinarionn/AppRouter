@@ -2,7 +2,7 @@ SHELL := /bin/bash
 # Install Tasks
 
 install-iOS:
-	xcrun instruments -w "iPhone 6s (10.2)" || true
+	xcrun instruments -w "iPhone 6s (10.0)" || true
 
 install-carthage:
 	brew remove carthage --force || true

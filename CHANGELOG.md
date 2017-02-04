@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [3.0.0](https://github.com/MLSDev/AppRouter/releases/tag/3.0.0)
 
-WARRNING: From now on Presenters source provider will use storyboard initial controller by default instead of one with class name StoryboardID.
+WARNING: From now on Presenters source provider will use storyboard initial controller by default instead of one with class name as StoryboardID.
 Make sure you check all code with default instantiations or with .presenter().fromStoryboard("name")
 
 All life circle observers was moved into Reactive namespace and can be accessed by calling instance.rx.onViewDidLoad() or Type.rx.onViewDidLoad()   
