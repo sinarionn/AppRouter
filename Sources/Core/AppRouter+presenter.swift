@@ -100,7 +100,7 @@ open class ViewControllerPresentConfiguration<T: UIViewController> {
     /// - parameter completion: The block to execute after the view controller is pushed.
     /// - returns: returns instance provided by `source` provider
     @discardableResult
-    open func push(animated: Bool = true, completion: Action? = nil) -> T? {
+    open func push(animated: Bool = true, completion: Func<Void, Void>? = nil) -> T? {
         guard let sourceController = source.provideController(T.self), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
         configurator(sourceController)
         guard let targetController = target.provideController(UIViewController.self) else { debug("error fetching target controller"); return nil }
@@ -115,7 +115,7 @@ open class ViewControllerPresentConfiguration<T: UIViewController> {
     /// - parameter completion: The block to execute after the view controller is presented.
     /// - returns: returns instance provided by `source` provider
     @discardableResult
-    open func present(animated: Bool = true, completion: Action? = nil) -> T? {
+    open func present(animated: Bool = true, completion: Func<Void, Void>? = nil) -> T? {
         guard let sourceController = source.provideController(T.self), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
         configurator(sourceController)
         guard let targetController = target.provideController(UIViewController.self) else { debug("error fetching target controller"); return nil }
