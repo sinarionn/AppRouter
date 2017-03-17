@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [3.0.3](https://github.com/MLSDev/AppRouter/releases/tag/3.0.2)
+
+Fixed bug with UIViewController instantiation inside UINavigationController
+
+
+## [3.0.2](https://github.com/MLSDev/AppRouter/releases/tag/3.0.2)
+
+Small dependencies fix
+
+
 ## [3.0.1](https://github.com/MLSDev/AppRouter/releases/tag/3.0.1)
 
 Typealias Action = () -> () was removed to avoid collisions with "Action" framework class names
