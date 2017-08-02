@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import AppRouter
+import AppRouter
 
 class AppRouterNavigationsTests: XCTestCase {
     

@@ -44,8 +44,8 @@
 		C0A128141D59C0CD0057F9E8 /* AppRouter+presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A1280E1D59C0CD0057F9E8 /* AppRouter+presenter.swift */; };
 		C0A128151D59C7820057F9E8 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A127E31D59C0440057F9E8 /* RxCocoa.framework */; };
 		C0A128161D59C7860057F9E8 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A127DB1D59C0440057F9E8 /* RxSwift.framework */; };
+		C0CF483A1F31E79300420613 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EBC9871D54D8BF007B483A /* ViewControllers.swift */; };
 		C0EBC9861D54D7C4007B483A /* TestApp.plist in Resources */ = {isa = PBXBuildFile; fileRef = C0EBC9851D54D7C4007B483A /* TestApp.plist */; };
-		C0EBC9881D54D8BF007B483A /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EBC9871D54D8BF007B483A /* ViewControllers.swift */; };
 		C0EEE3EA1D59EC7B00AAEFEA /* AppRouterReactiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EEE3E91D59EC7B00AAEFEA /* AppRouterReactiveTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -802,7 +802,6 @@
 			files = (
 				C0A128121D59C0CD0057F9E8 /* AppRouter+instantiations.swift in Sources */,
 				C0A128141D59C0CD0057F9E8 /* AppRouter+presenter.swift in Sources */,
-				C0EBC9881D54D8BF007B483A /* ViewControllers.swift in Sources */,
 				C02C117A1D59AC9F005F6E79 /* AppRouter+reactive.swift in Sources */,
 				C0A128131D59C0CD0057F9E8 /* AppRouter+navigations.swift in Sources */,
 				C0A128111D59C0CD0057F9E8 /* AppRouter+animations.swift in Sources */,
@@ -817,6 +816,7 @@
 			files = (
 				C089D33F1D54A42700599DD7 /* AppRouterInstantiationsTestsViewController.swift in Sources */,
 				C089D3481D54A42700599DD7 /* AppRouterNavigationsTests.swift in Sources */,
+				C0CF483A1F31E79300420613 /* ViewControllers.swift in Sources */,
 				C089D3451D54A42700599DD7 /* StoryboardWithInitialViewController.swift in Sources */,
 				C089D3531D54AB1800599DD7 /* TabBarControllerWithExpectations.swift in Sources */,
 				C089D33C1D54A42700599DD7 /* AppRouterAnimationsTests.swift in Sources */,
