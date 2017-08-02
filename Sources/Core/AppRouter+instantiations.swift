@@ -25,7 +25,7 @@ extension UIViewController {
         return _instantiateFromXib(self, xibName: xibName ?? String(describing: self))
     }
     
-    fileprivate class func _instantiateFromXib<T : UIViewController>(_ : T.Type, xibName : String) ->T {
+    fileprivate class func _instantiateFromXib<T : UIViewController>(_ : T.Type, xibName : String) -> T {
         return T(nibName: xibName, bundle: Bundle(for: self))
     }
 }

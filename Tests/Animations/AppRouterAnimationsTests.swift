@@ -12,18 +12,18 @@ import XCTest
 class AppRouterAnimationsTests: XCTestCase {
     
     override func setUp() {
-        AppRouter.rootViewController = nil
+        AppRouter.shared.rootViewController = nil
     }
     
     func testViewAnimation() {
         let first = AppRouterPresenterBaseController()
         let second = AppRouterPresenterAdditionalController()
         
-        AppRouter.animations.setRootWithViewAnimation(first, duration: 0)
+        AppRouter.shared.animator.setRootWithViewAnimation(first, duration: 0)
         XCTAssertTrue(AppRouter.rootViewController == first)
         
         let expectation =  self.expectation(description: "")
-        AppRouter.animations.setRootWithViewAnimation(second, duration: 0, callback: { _ in
+        AppRouter.shared.animator.setRootWithViewAnimation(second, duration: 0, callback: { _ in
             XCTAssertTrue(AppRouter.rootViewController == second)
             expectation.fulfill()
         })
@@ -34,11 +34,11 @@ class AppRouterAnimationsTests: XCTestCase {
         let first = AppRouterPresenterBaseController()
         let second = AppRouterPresenterAdditionalController()
         
-        AppRouter.animations.setRootWithWindowAnimation(first, duration: 0)
+        AppRouter.shared.animator.setRootWithWindowAnimation(first, duration: 0)
         XCTAssertTrue(AppRouter.rootViewController == first)
         
         let expectation =  self.expectation(description: "")
-        AppRouter.animations.setRootWithWindowAnimation(second, duration: 0, callback: { _ in
+        AppRouter.shared.animator.setRootWithWindowAnimation(second, duration: 0, callback: { _ in
             XCTAssertTrue(AppRouter.rootViewController == second)
             expectation.fulfill()
         })
@@ -49,11 +49,11 @@ class AppRouterAnimationsTests: XCTestCase {
         let first = AppRouterPresenterBaseController()
         let second = AppRouterPresenterAdditionalController()
         
-        AppRouter.animations.setRootWithSnapshotAnimation(first, duration: 0)
+        AppRouter.shared.animator.setRootWithSnapshotAnimation(first, duration: 0)
         XCTAssertTrue(AppRouter.rootViewController == first)
         
         let expectation =  self.expectation(description: "")
-        AppRouter.animations.setRootWithSnapshotAnimation(second, duration: 0, callback: { _ in
+        AppRouter.shared.animator.setRootWithSnapshotAnimation(second, duration: 0, callback: { _ in
             XCTAssertTrue(AppRouter.rootViewController == second)
             expectation.fulfill()
         })

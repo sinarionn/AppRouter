@@ -38,6 +38,24 @@ extension UIViewController {
         }
         return nil
     }
+    
+    /// Pop to previous controller in navigation stack. Do nothing if current is first
+    ///
+    /// - parameter animated: Set this value to true to animate the transition
+    /// - parameter completion: Called after transition ends successfully.
+    /// - returns: [UIViewCotnroller]? - returns the popped controllers
+    @discardableResult
+    public func pop(completion: Func<Void, Void>?) -> [UIViewController]? {
+        return pop(animated: true, completion: completion)
+    }
+    
+    /// Pop to previous controller in navigation stack. Do nothing if current is first
+    ///
+    /// - returns: [UIViewCotnroller]? - returns the popped controllers
+    @discardableResult
+    public func pop() -> [UIViewController]? {
+        return pop(animated: true)
+    }
 
     /// Tries to close viewController by popping to previous in navigation stack or by dismissing if presented
     ///
@@ -45,7 +63,7 @@ extension UIViewController {
     /// - parameter completion: Called after transition ends successfully
     /// - returns: returns true if able to close
     @discardableResult
-    public func close(animated: Bool = true, completion: Func<Void, Void>? = nil) -> Bool {
+    public func close(animated: Bool, completion: Func<Void, Void>? = nil) -> Bool {
         if canPop() {
             _ = pop(animated: animated, completion: completion)
         } else if isModal {
@@ -55,6 +73,23 @@ extension UIViewController {
             return false
         }
         return true
+    }
+    
+    /// Tries to close viewController by popping to previous in navigation stack or by dismissing if presented
+    ///
+    /// - parameter completion: Called after transition ends successfully
+    /// - returns: returns true if able to close
+    @discardableResult
+    public func close(completion: Func<Void, Void>?) -> Bool {
+        return close(animated: true, completion: completion)
+    }
+    
+    /// Tries to close viewController by popping to previous in navigation stack or by dismissing if presented
+    ///
+    /// - returns: returns true if able to close
+    @discardableResult
+    public func close() -> Bool {
+        return close(animated: true, completion: nil)
     }
     
     fileprivate func canPop() -> Bool {

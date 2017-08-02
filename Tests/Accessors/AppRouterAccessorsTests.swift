@@ -11,7 +11,7 @@ import XCTest
 
 class AppRouterAccessorsTests: XCTestCase {
     
-    func testHierarchyAccessors() {
+    func testHierarchyAccessors() throws {
         XCTAssertNil(AppRouter.rootViewController)
         XCTAssertNil(AppRouter.topViewController)
         

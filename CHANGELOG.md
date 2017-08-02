@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [4.0.0](https://github.com/MLSDev/AppRouter/releases/tag/3.0.2)
+
+AppRouter and Presenter was refactored to provide additional flexibility  
+
+
 ## [3.0.3](https://github.com/MLSDev/AppRouter/releases/tag/3.0.2)
 
 Fixed bug with UIViewController instantiation inside UINavigationController

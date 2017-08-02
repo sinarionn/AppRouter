@@ -1,207 +1,356 @@
 import Foundation
 import UIKit
 
-/// Presenter aggregator class
-open class ViewControllerPresentConfiguration<T: UIViewController> {
-    /// Provides target on which presentation will be applied
-    open var target : ARControllerProvider = ARPresentationTarget.top
-    
-    /// Provides controller which will be configured, embedded and presented
-    open var source : ARControllerProvider = ARPresentationSource.storyboard(initial: true)
-    
-    /// Embeds source inside container (UINavigationController, UITabBarController, etc) which will be used for presentation
-    open var embedder : (T) -> UIViewController? = { $0 }
-    
-    /// Configure source controller before presentation
-    open var configurator: (T) -> () = { _ in }
-    
-    /// Declare AppRouter.topViewController to be a **target** provider
-    open func onTop() -> ViewControllerPresentConfiguration {
-        target = ARPresentationTarget.top
-        return self
-    }
-    
-    /// Declare AppRouter.rootViewController to be a **target** provider
-    open func onRoot() -> ViewControllerPresentConfiguration {
-        target = ARPresentationTarget.root
-        return self
-    }
-    
-    /// Declare custom **target** provider
-    ///
-    /// - parameter targetBlock: block should return target viewController which will be used for presentation
-    open func onCustom(_ targetBlock : @escaping () -> UIViewController?) -> ViewControllerPresentConfiguration {
-        target = ARPresentationTarget.anonymous(targetBlock)
-        return self
-    }
-    
-    /// Declare **source** provider to take controller from storyboard
-    ///
-    /// - parameter name: Storyboard name. Default value: controller type
-    /// - parameter initial: Set this value if controller is initial in storyboard or it's rootController on initial UINavigationController
-    open func fromStoryboard(_ name: String? = nil, initial : Bool = true) -> ViewControllerPresentConfiguration {
-        if let name = name { source = ARPresentationSource.customStoryboard(name: name, inital: initial) }
-        else { source = ARPresentationSource.storyboard(initial: initial) }
-        return self
-    }
-    
-    /// Declare **source** provider to take controller from xib
-    ///
-    /// - parameter name: Xib name. Default value: contollers type
-    open func fromXib(_ name: String? = nil) -> ViewControllerPresentConfiguration {
-        if let name = name { source = ARPresentationSource.customXib(name) }
-        else { source = ARPresentationSource.xib }
-        return self
-    }
-    
-    /// Declare **configuration** block which used to configure controller before presentation
-    ///
-    /// - parameter configuration: block allows to apply additional configuration before presenting
-    open func configure(_ configurator: @escaping (T) -> ()) -> ViewControllerPresentConfiguration {
-        self.configurator = configurator
-        return self
-    }
-    
-    /// Declare **embedder** provider to embed controller in simple UINavigationController before presentation
-    ///
-    /// - parameter navigationController: set custom UINavigationController to be used
-    open func embedInNavigation(_ navigationController: UINavigationController = UINavigationController()) -> ViewControllerPresentConfiguration {
-        embedder = { source in
-            navigationController.viewControllers.append(source)
-            return navigationController
-        }
-        return self
-    }
-    
-    /// Declare **embedder** provider to embed controller in UITabBarController before presentation
-    ///
-    /// - parameter tabBarController: UITabBarController - used as container of source controller
-    open func embedInTabBar(_ tabBarController: UITabBarController) -> ViewControllerPresentConfiguration {
-        embedder = { source in
-            var originalCollection = tabBarController.viewControllers ?? []
-            originalCollection.append(source)
-            tabBarController.viewControllers = originalCollection
-            return tabBarController
-        }
-        return self
-    }
-    
-    /// Custom anonymous **embedder** provider
-    ///
-    /// - parameter embederBlock: block should return UIViewController which will be used as presentation target
-    open func embedIn(_ embederBlock: @escaping (T) -> UIViewController?) -> ViewControllerPresentConfiguration {
-        embedder = embederBlock
-        return self
-    }
-    
-    /// Push current configuration
-    ///
-    /// - parameter animated: Set this value to true to animate the transition.
-    /// - parameter completion: The block to execute after the view controller is pushed.
-    /// - returns: returns instance provided by `source` provider
-    @discardableResult
-    open func push(animated: Bool = true, completion: Func<Void, Void>? = nil) -> T? {
-        guard let sourceController = source.provideController(T.self), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
-        configurator(sourceController)
-        guard let targetController = target.provideController(UIViewController.self) else { debug("error fetching target controller"); return nil }
-        guard let targetNavigation = (targetController as? UINavigationController) ?? targetController.navigationController else { debug("error fetching navigation controller"); return nil }
-        targetNavigation.pushViewController(parent, animated: animated, completion: completion)
-        return sourceController
-    }
-    
-    /// Present current configuration
-    ///
-    /// - parameter animated: Set this value to true to animate the transition.
-    /// - parameter completion: The block to execute after the view controller is presented.
-    /// - returns: returns instance provided by `source` provider
-    @discardableResult
-    open func present(animated: Bool = true, completion: Func<Void, Void>? = nil) -> T? {
-        guard let sourceController = source.provideController(T.self), let parent = provideEmbeddedController(sourceController) else { debug("error constructing source controller"); return nil }
-        configurator(sourceController)
-        guard let targetController = target.provideController(UIViewController.self) else { debug("error fetching target controller"); return nil }
-        targetController.present(parent, animated: animated, completion: completion)
-        return sourceController
-    }
-    
-    /// Provides source controller already configured for use.
-    ///
-    /// - returns: controller created from source.
-    open func provideSourceController() -> T? {
-        guard let sourceController = source.provideController(T.self) else { debug("error constructing source controller"); return nil }
-        configurator(sourceController)
-        return sourceController
-    }
-    
-    /// Provides source controller embedded in `embedder` controller and configured for use.
-    ///
-    /// - returns: embedded controller.
-    open func provideEmbeddedSourceController() -> UIViewController? {
-        guard let sourceController = source.provideController(T.self) else { debug("error constructing source controller"); return nil }
-        guard let embedded = provideEmbeddedController(sourceController) else { return nil }
-        configurator(sourceController)
-        return embedded
-    }
-    
-    fileprivate func provideEmbeddedController(_ sourceController: T) -> UIViewController? {
-        guard let parent = embedder(sourceController) else { debug("error embedding controller"); return nil }
-        return parent
-    }
-    
-    fileprivate func debug(_ str: String) {        
-        AppRouter.print("#[Presenter<\(T.self)>] " + str)
+extension AppRouter {
+    public enum Presenter {
+        /// Factory for Configurations construction. Can be replaced with your own.
+        public static var configurationFactory: ARPresentConfigurationFactory = AppRouter.Presenter.DefaultBuilder()
     }
 }
 
-enum ARPresentationTarget : ARControllerProvider{
-    case top
-    case root
-    case anonymous(() -> UIViewController?)
-    func provideController<T : UIViewController>(_ type: T.Type) -> T? {
-        switch self {
-        case .top: return AppRouter.topViewController() as? T
-        case .root: return AppRouter.rootViewController as? T
-        case .anonymous(let provider): return provider() as? T
+/// Used for PresentConfiguration construction
+public protocol ARPresentConfigurationFactory {
+    func buildPresenter<T>() -> AppRouter.Presenter.Configuration<T>
+}
+
+public protocol AppRouterType: class {
+    var window: UIWindow { get }
+    var topViewController: UIViewController? { get }
+    var rootViewController: UIViewController? { get set }
+}
+
+extension AppRouter: AppRouterType {}
+
+extension AppRouter.Presenter {
+    /// Presenter aggregator class
+    open class Configuration<T: UIViewController> {
+        /// Base router to work with
+        var router: AppRouterType
+        
+        /// Provides target on which presentation will be applied
+        var targetProvider : () throws -> UIViewController
+        
+        /// Provides controller which will be configured, embedded and presented
+        var sourceProvider : () throws -> T = PresentationSource.storyboard(initial: true).provideController
+        
+        /// Embeds source inside container (UINavigationController, UITabBarController, etc) which will be used for presentation
+        var embedder : (T) throws -> UIViewController = { $0 }
+        
+        /// Configure source controller before presentation
+        var configurator: (T) throws -> () = { _ in }
+        
+        /// Declare router.topViewController to be a **target** provider
+        open func onTop() -> Self {
+            targetProvider = PresentationTarget.top(router).provideController
+            return self
+        }
+        
+        /// Declare router.rootViewController to be a **target** provider
+        open func onRoot() -> Self {
+            targetProvider = PresentationTarget.root(router).provideController
+            return self
+        }
+        
+        /// Declare custom **target** provider
+        ///
+        /// - parameter provider: block should return target viewController which will be used for presentation
+        open func on(_ provider: @escaping () throws -> UIViewController) -> Self {
+            targetProvider = provider
+            return self
+        }
+        
+        /// Declare **source** provider to take controller from storyboard
+        ///
+        /// - parameter name: Storyboard name. Default value: controller type
+        /// - parameter initial: Set this value if controller is initial in storyboard or it's rootController on initial UINavigationController
+        open func fromStoryboard(_ name: String? = nil, initial : Bool = true) -> Self {
+            if let name = name { sourceProvider = PresentationSource.customStoryboard(name: name, inital: initial).provideController }
+            else { sourceProvider = PresentationSource.storyboard(initial: initial).provideController }
+            return self
+        }
+        
+        /// Declare **source** provider to take controller from xib
+        ///
+        /// - parameter name: Xib name. Default value: contollers type
+        open func fromXib(_ name: String? = nil) -> Self {
+            if let name = name { sourceProvider = PresentationSource.customXib(name).provideController }
+            else { sourceProvider = PresentationSource.xib.provideController }
+            return self
+        }
+        
+        /// Declare **source** factory to take controller from
+        ///
+        /// - parameter provider: closure that providers source controller
+        open func from(provider: @escaping () throws -> T) -> Self {
+            sourceProvider = provider
+            return self
+        }
+        
+        /// Declare **configuration** block which used to configure controller before presentation
+        ///
+        /// - parameter configuration: block allows to apply additional configuration before presenting
+        open func configure(_ configuration: @escaping (T) throws -> ()) -> Self {
+            self.configurator = configuration
+            return self
+        }
+        
+        /// Declare **embedder** provider to embed controller in simple UINavigationController before presentation
+        ///
+        /// - parameter navigationController: set custom UINavigationController to be used
+        open func embedInNavigation(_ navigationController: UINavigationController = UINavigationController()) -> Self {
+            embedder = { source in
+                navigationController.viewControllers.append(source)
+                return navigationController
+            }
+            return self
+        }
+        
+        /// Declare **embedder** provider to embed controller in UITabBarController before presentation
+        ///
+        /// - parameter tabBarController: UITabBarController - used as container of source controller
+        open func embedInTabBar(_ tabBarController: UITabBarController) -> Self {
+            embedder = { source in
+                tabBarController.viewControllers = tabBarController.viewControllers ?? [] + [source]
+                return tabBarController
+            }
+            return self
+        }
+        
+        /// Custom anonymous **embedder** provider
+        ///
+        /// - parameter embederBlock: block should return UIViewController which will be used as presentation target
+        open func embedIn(_ embederBlock: @escaping (T) throws -> UIViewController) -> Self {
+            embedder = embederBlock
+            return self
+        }
+        
+        /// Push current configuration
+        ///
+        /// - parameter animated: Set this value to true to animate the transition.
+        /// - parameter completion: The block to execute after the view controller is pushed.
+        /// - returns: returns instance provided by `source` provider
+        @discardableResult
+        open func push(animated: Bool, completion: Func<Void, Void>? = nil) -> T? {
+            do {
+                let embedded = try provideEmbeddedSourceController()
+                guard !(embedded.parent is UINavigationController) else { throw Errors.tryingToPushNavigationController }
+                let targetController = try performTargetConstruction() as UIViewController
+                let targetNavigation = try targetController as? UINavigationController ??
+                                           targetController.navigationController ??
+                                           Errors.failedToFindNavigationControllerToPushOn.rethrow()
+                targetNavigation.pushViewController(embedded.parent, animated: animated, completion: completion)
+                return embedded.child
+            } catch {
+                AppRouter.print(error.localizedDescription)
+                return nil
+            }
+        }
+        
+        /// Push current configuration
+        ///
+        /// - returns: returns instance provided by `source` provider
+        @discardableResult
+        open func push() -> T? {
+            return push(animated: true)
+        }
+        
+        /// Present current configuration
+        ///
+        /// - parameter animated: Set this value to true to animate the transition.
+        /// - parameter completion: The block to execute after the view controller is presented.
+        /// - returns: returns instance provided by `source` provider
+        @discardableResult
+        open func present(animated: Bool, completion: Func<Void, Void>? = nil) -> T? {
+            do {
+                let embedded = try provideEmbeddedSourceController()
+                let targetController = try performTargetConstruction() as UIViewController
+                targetController.present(embedded.parent, animated: animated, completion: completion)
+                return embedded.child
+            } catch {
+                AppRouter.print(error.localizedDescription)
+                return nil
+            }
+        }
+        
+        /// Present current configuration
+        ///
+        /// - returns: returns instance provided by `source` provider
+        @discardableResult
+        open func present() -> T? {
+            return present(animated: true)
+        }
+
+        /// Set embedded controller as rootViewController
+        ///
+        /// - parameter animation: Animation configuration
+        /// - parameter completion: The block to execute after the view controller is setted.
+        /// - returns: returns instance provided by `source` provider
+        @discardableResult
+        open func setAsRoot(animation: AppRouter.Animators.AnimationType, completion: Func<Bool, Void>? = nil) -> T? {
+            do {
+                let embedded = try provideEmbeddedSourceController()
+                router.animator.setRoot(controller: embedded.parent, animation: animation, callback: completion)
+                return embedded.child
+            } catch {
+                AppRouter.print(error.localizedDescription)
+                return nil
+            }
+        }
+        
+        /// Set embedded controller as rootViewController with window crossDissolve animation
+        ///
+        /// - returns: returns instance provided by `source` provider
+        @discardableResult
+        open func setAsRoot() -> T? {
+            return setAsRoot(animation: .window(options: .transitionCrossDissolve, duration: 0.3))
+        }
+        
+        /// Provides source controller already configured for use.
+        ///
+        /// - returns: controller created from source.
+        open func provideSourceController() throws -> T {
+            let sourceController = try performSourceConstruction()
+            try performConfiguration(for: sourceController)
+            return sourceController
+        }
+        
+        /// Provides source controller embedded in `embedder` controller and configured for use.
+        ///
+        /// - returns: embedded controller.
+        open func provideEmbeddedSourceController() throws -> (child: T, parent: UIViewController) {
+            let sourceController = try performSourceConstruction()
+            let embedded = try performEmbed(for: sourceController)
+            try performConfiguration(for: sourceController)
+            return (child: sourceController, parent: embedded)
+        }
+        
+        /// Override point to perform additional logic while constructing source controller
+        ///
+        /// - returns: source controller.
+        open func performSourceConstruction() throws -> T {
+            return try sourceProvider()
+        }
+        
+        /// Override point to perform additional logic while constructing target controller
+        ///
+        /// - returns: target controller.
+        open func performTargetConstruction<U: UIViewController>() throws -> U {
+            return try targetProvider() as? U ?? Errors.failedToConstructTargetController.rethrow()
+        }
+        
+        /// Override point to perform additional logic while embedding source controller
+        ///
+        /// - returns: parent controller
+        open func performEmbed(for source: T) throws -> UIViewController {
+            return try embedder(source)
+        }
+        
+        /// Override point to perform additional logic while configuring source controller
+        ///
+        /// - parameter for: source controller to perform configuration on
+        open func performConfiguration(for source: T) throws -> Void {
+            if #available(iOS 9.0, *) {
+                source.loadViewIfNeeded()
+            } else {
+                _ = source.view
+            }
+            return try configurator(source)
+        }
+        
+        public init(router: AppRouterType = AppRouter.shared) {
+            self.router = router
+            self.targetProvider = PresentationTarget.top(router).provideController
+        }
+    }
+    
+    public enum Errors: LocalizedError {
+        case failedToConstructSourceController
+        case failedToConstructTargetController
+        case failedToEmbedSourceController
+        case failedToFindNavigationControllerToPushOn
+        case tryingToPushNavigationController
+        
+        public var errorDescription: String? {
+            switch self {
+            case .failedToConstructSourceController:
+                return "[AppRouter][Presenter] failed to construct source controller."
+            case .failedToConstructTargetController:
+                return "[AppRouter][Presenter] failed to construct target controller."
+            case .failedToEmbedSourceController:
+                return "[AppRouter][Presenter] failed to embed source controller."
+            case .failedToFindNavigationControllerToPushOn:
+                return "[AppRouter][Presenter] failed to find navigation controller (using target provider) to push on."
+            case .tryingToPushNavigationController:
+                return "[AppRouter][Presenter] trying to push navigation controller (provided by source provider)."
+            }
+        }
+    }
+    
+    public enum PresentationTarget {
+        case top(AppRouterType)
+        case root(AppRouterType)
+        case anonymous(() throws -> UIViewController)
+        public func provideController<T: UIViewController>() throws -> T {
+            switch self {
+            case .top(let router):
+                return try router.topViewController as? T ?? Errors.failedToConstructTargetController.rethrow()
+            case .root(let router):
+                return try router.rootViewController as? T ?? Errors.failedToConstructTargetController.rethrow()
+            case .anonymous(let provider):
+                return try provider() as? T ?? Errors.failedToConstructTargetController.rethrow()
+            }
+        }
+    }
+    
+    public enum PresentationSource {
+        case storyboard(initial: Bool)
+        case xib
+        case customStoryboard(name: String, inital: Bool)
+        case customXib(String)
+        case preconstructed(UIViewController)
+        case anonymous(() throws -> UIViewController)
+        public func provideController<T: UIViewController>() throws -> T where T : BundleForClassInstantiable {
+            switch self {
+            case .storyboard(let initial):
+                return try T.instantiate(initial: initial) ?? Errors.failedToConstructSourceController.rethrow()
+            case .customStoryboard(let name, let initial):
+                return try T.instantiate(storyboardName: name, initial: initial) ?? Errors.failedToConstructSourceController.rethrow()
+            case .xib:
+                return try T.instantiateFromXib() ?? Errors.failedToConstructSourceController.rethrow()
+            case .customXib(let name):
+                return try T.instantiateFromXib(name) ?? Errors.failedToConstructSourceController.rethrow()
+            case .preconstructed(let vc):
+                return try vc as? T ?? Errors.failedToConstructSourceController.rethrow()
+            case .anonymous(let provider):
+                return try provider() as? T ?? Errors.failedToConstructSourceController.rethrow()
+            }
+        }
+    }
+    
+    internal struct DefaultBuilder: ARPresentConfigurationFactory {
+        func buildPresenter<T>() -> AppRouter.Presenter.Configuration<T> where T : UIViewController {
+            return .init()
         }
     }
 }
 
-enum ARPresentationSource : ARControllerProvider {
-    case storyboard(initial: Bool)
-    case xib
-    case customStoryboard(name: String, inital: Bool)
-    case customXib(String)
-    case preconstructed(UIViewController)
-    func provideController<T : UIViewController>(_ type: T.Type) -> T? where T : BundleForClassInstantiable {
-        switch self {
-        case .storyboard(let initial): return T.instantiate(initial: initial)
-        case .customStoryboard(let name, let initial): return T.instantiate(storyboardName: name, initial: initial)
-        case .xib: return T.instantiateFromXib()
-        case .customXib(let name): return T.instantiateFromXib(name)
-        case .preconstructed(let vc): return vc as? T
-        }
+extension Error {
+    internal func rethrow<T>() throws -> T {
+        throw self
     }
 }
-
-/// Used for source and target controller providing
-public protocol ARControllerProvider {
-    /// It should return controller instance of specified type
-    func provideController<T : UIViewController>(_ type: T.Type) -> T?
-}
-
 
 /// Workaround to use Self as generic constraint in method
 public protocol ARControllerConfigurableProtocol : class {}
 extension UIViewController : ARControllerConfigurableProtocol {}
 extension ARControllerConfigurableProtocol where Self: UIViewController {
     /// Presentation configurator. Defaults: -onTop -fromStoryboard
-    public static func presenter() -> ViewControllerPresentConfiguration<Self> {
-        return ViewControllerPresentConfiguration()
+    public static func presenter() -> AppRouter.Presenter.Configuration<Self> {
+        return AppRouter.Presenter.configurationFactory.buildPresenter()
     }
     
-    /// Presentation configurator with current instance used as source. Default target - onTop
-    public func presenter() -> ViewControllerPresentConfiguration<Self> {
-        let configuration : ViewControllerPresentConfiguration<Self> = ViewControllerPresentConfiguration()
-        configuration.source = ARPresentationSource.preconstructed(self)
-        return configuration
+    /// Presentation configurator with current instance used as source. Default target - onTop. Warrning - current controller instance will be captured.
+    public func presenter() -> AppRouter.Presenter.Configuration<Self> {
+        return AppRouter.Presenter.configurationFactory.buildPresenter().from{ self }
     }
 }
