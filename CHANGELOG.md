@@ -2,8 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.1](https://github.com/MLSDev/AppRouter/releases/tag/4.0.1)
 
-## [4.0.0](https://github.com/MLSDev/AppRouter/releases/tag/3.0.2)
+Presenter namespace-enum changed into open class to prevent weird bug with overrides.
+
+
+## [4.0.0](https://github.com/MLSDev/AppRouter/releases/tag/4.0.0)
 
 AppRouter and Presenter was refactored to provide additional flexibility  
 

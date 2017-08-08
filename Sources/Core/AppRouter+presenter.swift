@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 extension AppRouter {
-    public enum Presenter {
+    open class Presenter {
         /// Factory for Configurations construction. Can be replaced with your own.
         public static var configurationFactory: ARPresentConfigurationFactory = AppRouter.Presenter.DefaultBuilder()
     }
