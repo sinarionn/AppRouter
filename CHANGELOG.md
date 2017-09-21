@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.2](https://github.com/MLSDev/AppRouter/releases/tag/4.0.2)
+
+Swift 3.2 migration.
+
+
 ## [4.0.1](https://github.com/MLSDev/AppRouter/releases/tag/4.0.1)
 
 Presenter namespace-enum changed into open class to prevent weird bug with overrides.

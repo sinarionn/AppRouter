@@ -309,7 +309,7 @@ extension AppRouter.Presenter {
         case customXib(String)
         case preconstructed(UIViewController)
         case anonymous(() throws -> UIViewController)
-        public func provideController<T: UIViewController>() throws -> T where T : BundleForClassInstantiable {
+        public func provideController<T: UIViewController>() throws -> T {
             switch self {
             case .storyboard(let initial):
                 return try T.instantiate(initial: initial) ?? Errors.failedToConstructSourceController.rethrow()

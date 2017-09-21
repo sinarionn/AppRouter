@@ -4,7 +4,7 @@ matrix:
       env: ACTION=iOS
 
 language: objective-c
-osx_image: xcode8.3
+osx_image: xcode9
 
 script:
   - git submodule update --init --recursive
