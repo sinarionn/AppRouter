@@ -36,6 +36,8 @@
 		C0A128151D59C7820057F9E8 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A127E31D59C0440057F9E8 /* RxCocoa.framework */; };
 		C0A128161D59C7860057F9E8 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A127DB1D59C0440057F9E8 /* RxSwift.framework */; };
 		C0CF483A1F31E79300420613 /* ViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EBC9871D54D8BF007B483A /* ViewControllers.swift */; };
+		C0D16F361FCFF9CA0080F94C /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A127DB1D59C0440057F9E8 /* RxSwift.framework */; };
+		C0D16F371FCFF9CA0080F94C /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A127DD1D59C0440057F9E8 /* RxSwift.framework */; };
 		C0D64FC71FB44E25003B6B89 /* AppRouter+reactive_osx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D64FBF1FB44DF0003B6B89 /* AppRouter+reactive_osx.swift */; };
 		C0D64FCA1FB44E25003B6B89 /* AppRouter+reactive_ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02C11791D59AC9F005F6E79 /* AppRouter+reactive_ios.swift */; };
 		C0D64FDA1FB450C4003B6B89 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A128091D59C0CD0057F9E8 /* AppRouter.swift */; };
@@ -311,6 +313,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0D16F361FCFF9CA0080F94C /* RxSwift.framework in Frameworks */,
+				C0D16F371FCFF9CA0080F94C /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +352,7 @@
 				9AC8C9FF1969BBB5006F1EAC /* Tests */,
 				C089D35A1D54AC1200599DD7 /* TestApp */,
 				9AC8C9F01969BBB5006F1EAC /* Products */,
+				C0D16F221FCFF9CA0080F94C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -456,6 +461,13 @@
 				C0A1280E1D59C0CD0057F9E8 /* AppRouter+presenter.swift */,
 			);
 			name = Core;
+			sourceTree = "<group>";
+		};
+		C0D16F221FCFF9CA0080F94C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		C0EDB0541D549CD100E38951 /* Accessors */ = {
