@@ -49,7 +49,7 @@ extension UIViewController : ARToppestControllerProvider {
     /// ARToppestControllerProvider implementation
     ///
     /// - returns: presentedViewController
-    open func toppestControllerFromCurrent() -> UIViewController? {
+    @objc open func toppestControllerFromCurrent() -> UIViewController? {
         return self.presentedViewController
     }
 }

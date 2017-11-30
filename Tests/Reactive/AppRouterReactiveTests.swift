@@ -8,7 +8,7 @@
 
 import XCTest
 import RxSwift
-@testable import AppRouter
+import AppRouterRx
 
 class AppRouterReactiveTests: XCTestCase {
     

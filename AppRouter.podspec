@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "AppRouter"
-  s.version      = "4.0.2"
+  s.version      = "4.1.0"
   s.summary      = "UIViewController creation, navigation, utility methods for easy routing"
 
   s.homepage     = "https://github.com/MLSDev/AppRouter"
@@ -21,8 +21,8 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'RxSwift' do |rxswift|
-      rxswift.dependency 'AppRouter/Core'
-      rxswift.dependency 'RxSwift', '~> 3.0'
+      s.osx.deployment_target = "10.10"
+      rxswift.dependency 'RxSwift', '~> 4.0'
       rxswift.source_files = 'Sources/RxSwift/*.swift'
   end
 end

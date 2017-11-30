@@ -11,8 +11,9 @@ Extremely easy way to handle controller creation / presentation / navigation and
 ## Requirements
 
 - iOS 8.0+
+- macOS 10.10+ (RxSwift subspec only)
 - Xcode 9+
-- Swift 3.2
+- Swift 4
 
 ## Installation
 
@@ -22,9 +23,11 @@ Extremely easy way to handle controller creation / presentation / navigation and
 pod 'AppRouter'
 ```
 
-RxSwift extension for AppRouter with lifeCircle observables:
+RxSwift extension for AppRouter with life cycle observables:
+**Warrning:** RxSwift subspec does not include `Core` anymore.
 
 ```ruby
+pod 'AppRouter'
 pod 'AppRouter/RxSwift'
 ```
 

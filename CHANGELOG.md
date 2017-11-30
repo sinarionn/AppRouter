@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0](https://github.com/MLSDev/AppRouter/releases/tag/4.1.0)
+
+Swift 4 migration.
+MacOS support for RxSwift subspec
+RxSwift subspec does not include Core automatically to allow usage in Cocoa applications.
+
+
 ## [4.0.2](https://github.com/MLSDev/AppRouter/releases/tag/4.0.2)
 
 Swift 3.2 migration.

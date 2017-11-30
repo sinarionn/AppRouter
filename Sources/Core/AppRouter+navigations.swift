@@ -197,10 +197,10 @@ extension UINavigationController {
     fileprivate func _сoordinator(_ animated: Bool, completion: Func<Void, Void>?) {
         if let coordinator = transitionCoordinator , animated {
             coordinator.animate(alongsideTransition: nil) { _ in
-                completion?()
+                completion?(())
             }
         } else {
-            completion?()
+            completion?(())
         }
     }
 }
