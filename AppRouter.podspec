@@ -21,6 +21,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'RxSwift' do |rxswift|
+      rxswift.ios.deployment_target = "8.0"
       rxswift.osx.deployment_target = "10.10"
       rxswift.dependency 'RxSwift', '~> 4.0'
       rxswift.source_files = 'Sources/RxSwift/*.swift'
