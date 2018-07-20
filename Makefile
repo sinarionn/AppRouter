@@ -1,8 +1,9 @@
 SHELL := /bin/bash
 # Install Tasks
 
+
 install-iOS:
-	xcrun instruments -w "iPhone 6s (10.0)" || true
+	xcrun instruments -w "iPhone SE" || true
 
 install-carthage:
 	brew remove carthage --force || true
@@ -13,7 +14,7 @@ install-cocoapods:
 
 
 test-iOS:
-	set -o pipefail && xcodebuild -project AppRouter.xcodeproj -scheme AppRouter -destination 'name=iPhone 6s' -enableCodeCoverage YES test -configuration "Release" | xcpretty -ct
+	set -o pipefail && xcodebuild -project AppRouter.xcodeproj -scheme TestApp -destination "name=iPhone SE" -enableCodeCoverage YES test -configuration "Debug" | xcpretty -ct
 	bash <(curl -s https://codecov.io/bash)
 
 test-carthage:

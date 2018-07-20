@@ -10,89 +10,70 @@
     import Cocoa
 #if !RX_NO_MODULE
     import RxSwift
+    import RxCocoa
 #endif
     
     public extension Reactive where Base: NSViewController {
         /// Observe viewDidLoad calls on current instance
-        public func onViewDidLoad() -> Observable<Void> {
-            return ARViewControllerLifeCycleManager.instance.didLoad.filter{ [weak base] in $0 === base }.map{ _ in () }
+        public func onViewDidLoad() -> Signal<Void> {
+            return ARViewControllerLifeCycleManager.instance.didLoad.asSignal(onErrorSignalWith: .empty()).filter{ [weak base] in $0 === base }.map{ _ in () }
         }
         
         /// Observe viewWillAppear calls on current instance
-        public func onViewWillAppear() -> Observable<Void> {
-            return ARViewControllerLifeCycleManager.instance.willAppear.filter{ [weak base] in $0 === base }.map{ _ in () }
+        public func onViewWillAppear() -> Signal<Void> {
+            return ARViewControllerLifeCycleManager.instance.willAppear.asSignal(onErrorSignalWith: .empty()).filter{ [weak base] in $0 === base }.map{ _ in () }
         }
         
         /// Observe viewDidAppear calls on current instance
-        public func onViewDidAppear() -> Observable<Void> {
-            return ARViewControllerLifeCycleManager.instance.didAppear.filter{ [weak base] in $0 === base }.map{ _ in () }
+        public func onViewDidAppear() -> Signal<Void> {
+            return ARViewControllerLifeCycleManager.instance.didAppear.asSignal(onErrorSignalWith: .empty()).filter{ [weak base] in $0 === base }.map{ _ in () }
         }
         
         /// Observe viewWillDisappear calls on current instance
-        public func onViewWillDisappear() -> Observable<Void> {
-            return ARViewControllerLifeCycleManager.instance.willDisappear.filter{ [weak base] in $0 === base }.map{ _ in () }
+        public func onViewWillDisappear() -> Signal<Void> {
+            return ARViewControllerLifeCycleManager.instance.willDisappear.asSignal(onErrorSignalWith: .empty()).filter{ [weak base] in $0 === base }.map{ _ in () }
         }
         
         /// Observe viewDidDisappear calls on current instance
-        public func onViewDidDisappear() -> Observable<Void> {
-            return ARViewControllerLifeCycleManager.instance.didDisappear.filter{ [weak base] in $0 === base }.map{ _ in () }
+        public func onViewDidDisappear() -> Signal<Void> {
+            return ARViewControllerLifeCycleManager.instance.didDisappear.asSignal(onErrorSignalWith: .empty()).filter{ [weak base] in $0 === base }.map{ _ in () }
         }
     }
     
     public extension Reactive where Base: NSViewController {
         /// observe viewDidLoad calls on all instances of current type
-        public static func onViewDidLoad() -> Observable<Base> {
-            return Observable.create({ observer -> Disposable in
-                return ARViewControllerLifeCycleManager.instance.didLoad.subscribe(onNext: { vc in
-                    if let required = vc as? Base {
-                        observer.onNext(required)
-                    }
-                })
-            })
+        public static func onViewDidLoad() -> Signal<Base> {
+            return filterBase(ARViewControllerLifeCycleManager.instance.didLoad)
         }
         
         /// observe viewWillAppear calls on all instances of current type
-        public static func onViewWillAppear() -> Observable<Base> {
-            return Observable.create({ observer -> Disposable in
-                return ARViewControllerLifeCycleManager.instance.willAppear.subscribe(onNext: { vc in
-                    if let required = vc as? Base {
-                        observer.onNext(required)
-                    }
-                })
-            })
+        public static func onViewWillAppear() -> Signal<Base> {
+            return filterBase(ARViewControllerLifeCycleManager.instance.willAppear)
         }
         
         /// observe viewDidAppear calls on all instances of current type
-        public static func onViewDidAppear() -> Observable<Base> {
-            return Observable.create({ observer -> Disposable in
-                return ARViewControllerLifeCycleManager.instance.didAppear.subscribe(onNext: { vc in
-                    if let required = vc as? Base {
-                        observer.onNext(required)
-                    }
-                })
-            })
+        public static func onViewDidAppear() -> Signal<Base> {
+            return filterBase(ARViewControllerLifeCycleManager.instance.didAppear)
         }
         
         /// observe viewWillDisappear calls on all instances of current type
-        public static func onViewWillDisappear() -> Observable<Base> {
-            return Observable.create({ observer -> Disposable in
-                return ARViewControllerLifeCycleManager.instance.willDisappear.subscribe(onNext: { vc in
-                    if let required = vc as? Base {
-                        observer.onNext(required)
-                    }
-                })
-            })
+        public static func onViewWillDisappear() -> Signal<Base> {
+            return filterBase(ARViewControllerLifeCycleManager.instance.willDisappear)
         }
         
         /// observe viewDidDisappear calls on all instances of current type
-        public static func onViewDidDisappear() -> Observable<Base> {
-            return Observable.create({ observer -> Disposable in
-                return ARViewControllerLifeCycleManager.instance.didDisappear.subscribe(onNext: { vc in
-                    if let required = vc as? Base {
-                        observer.onNext(required)
-                    }
-                })
-            })
+        public static func onViewDidDisappear() -> Signal<Base> {
+            return filterBase(ARViewControllerLifeCycleManager.instance.didDisappear)
+        }
+        
+        private static func filterBase(_ publisher: PublishSubject<NSViewController>) -> Signal<Base> {
+            return publisher.asSignal(onErrorSignalWith: .empty()).flatMap{
+                if let required = $0 as? Base {
+                    return .just(required)
+                } else {
+                    return .empty()
+                }
+            }
         }
     }
     

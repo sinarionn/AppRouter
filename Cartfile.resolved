@@ -1,1 +1,3 @@
-github "ReactiveX/RxSwift" "a0bf386834ca09e0438e2edf03d740eac3c4a6ce"
+github "AliSoftware/Dip" "6.1"
+github "ReactiveX/RxSwift" "4.2.0"
+github "sinarionn/ReusableView" "2.0.1"

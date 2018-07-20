@@ -1,1 +1,3 @@
 github "ReactiveX/RxSwift"
+github "sinarionn/ReusableView"
+github "AliSoftware/Dip"

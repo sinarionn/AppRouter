@@ -1,11 +1,18 @@
+language: objective-c
+osx_image: xcode9.3
+cache:
+  directories:
+  - Carthage
 matrix:
   include:
-    - os: osx
-      env: ACTION=iOS
-
-language: objective-c
-osx_image: xcode9.1
-
+  - os: osx
+    env: ACTION=iOS
+before_script:
+- brew update
+- brew outdated carthage || brew upgrade carthage
+- carthage bootstrap --cache-builds
 script:
-  - git submodule update --init --recursive
-  - make install-$ACTION && make test-$ACTION
+- make install-$ACTION && make test-$ACTION
+env:
+  global:
+    secure: GeiEk7uS5SHr0owH5Oqfn0s46ar8UA9aKVq9g/MMrotvY5MIEPMwrpvZ5PI9nlPk9h3n5pAsKImMgkZsfQH9H1JqYB5AapVwcGtTi0QmJDm2oonq06N4Z45d3kFunlSqZFSD/H2bM/ZA0mj7zgMg1cKBM5tAaWLQyobguFQVJ0uCWpfX4+EUxxw57tcrUmJBj9poxR23bujuN87m23VsvWCDKewDxcfMtc01uxfOXSwLbJYPMuIdcOrs0CYQCyNjOp5ULUoUnpREBA/hNXOnRwjuBlJ6ZTIvnLsjsm9zxCwF8XCKQWBxbEzDW+un6/WsZjTGWBINaILhA5ivfpX+JulVMXP2wLUQojYXtxKtOBSd4Muwm9OVCX5gYP8FywuEAIsI5+Urz2aIJnJzvH5NTIqscJ3esrzND/P3vareDomeyqh0XC1IOwonYxZyWQVs/8jPlhmPtcnhMaUsV1hYZuWjvtRbnGx7dB87yrKLhDXwHpOZEsxYgyUfdPnf2EUY/nDBeiutE/uFNqT9fefpcwy4P5GNmRrDg/CBC0whYVinmfGhaXXzjbJCEc122/U/ZuDLsSPQs4kPlJRBFfxRKaeeWD36aGMD3uhgJOJEcEOy25C82JffXkkbBPlOrhvvGSoDTxbUItUi4yBjO+T9NTkjBFg6CNJn0Ap2l8mUYN4=

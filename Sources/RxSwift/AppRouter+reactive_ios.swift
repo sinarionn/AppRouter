@@ -10,89 +10,80 @@
     import UIKit
 #if !RX_NO_MODULE
     import RxSwift
+    import RxCocoa
 #endif
 
 public extension Reactive where Base: UIViewController {
     /// Observe viewDidLoad calls on current instance
-    public func onViewDidLoad() -> Observable<Void> {
-        return ARViewControllerLifeCycleManager.instance.didLoad.filter{ [weak base] in $0 === base }.map{ _ in () }
+    public func onViewDidLoad() -> Signal<Void> {
+        return ARViewControllerLifeCycleManager.instance.didLoad.asSignal(onErrorSignalWith: .empty()).filter{ [weak base] in $0 === base }.map{ _ in () }
     }
     
     /// Observe viewWillAppear calls on current instance
-    public func onViewWillAppear() -> Observable<Bool> {
-        return ARViewControllerLifeCycleManager.instance.willAppear.filter{ [weak base] in $0.controller === base }.map{ $0.animated }
+    public func onViewWillAppear() -> Signal<Bool> {
+        return filterInstance(ARViewControllerLifeCycleManager.instance.willAppear)
     }
     
     /// Observe viewDidAppear calls on current instance
-    public func onViewDidAppear() -> Observable<Bool> {
-        return ARViewControllerLifeCycleManager.instance.didAppear.filter{ [weak base] in $0.controller === base }.map{ $0.animated }
+    public func onViewDidAppear() -> Signal<Bool> {
+        return filterInstance(ARViewControllerLifeCycleManager.instance.didAppear)
     }
     
     /// Observe viewWillDisappear calls on current instance
-    public func onViewWillDisappear() -> Observable<Bool> {
-        return ARViewControllerLifeCycleManager.instance.willDisappear.filter{ [weak base] in $0.controller === base }.map{ $0.animated }
+    public func onViewWillDisappear() -> Signal<Bool> {
+        return filterInstance(ARViewControllerLifeCycleManager.instance.willDisappear)
     }
     
     /// Observe viewDidDisappear calls on current instance
-    public func onViewDidDisappear() -> Observable<Bool> {
-        return ARViewControllerLifeCycleManager.instance.didDisappear.filter{ [weak base] in $0.controller === base }.map{ $0.animated }
+    public func onViewDidDisappear() -> Signal<Bool> {
+        return filterInstance(ARViewControllerLifeCycleManager.instance.didDisappear)
+    }
+    
+    private func filterInstance(_ publisher: PublishSubject<(controller: UIViewController,animated: Bool)>) -> Signal<Bool> {
+        return publisher.asSignal(onErrorSignalWith: .empty()).filter{ [weak base] in $0.controller === base }.map{ $0.animated }
     }
 }
 
 public extension Reactive where Base: UIViewController {
     /// observe viewDidLoad calls on all instances of current type
-    public static func onViewDidLoad() -> Observable<Base> {
-        return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCycleManager.instance.didLoad.subscribe(onNext: { vc in
-                if let required = vc as? Base {
-                    observer.onNext(required)
-                }
-            })
-        })
+    public static func onViewDidLoad() -> Signal<Base> {
+        return ARViewControllerLifeCycleManager.instance.didLoad.asSignal(onErrorSignalWith: .empty()).flatMap{
+            if let required = $0 as? Base {
+                return .just(required)
+            } else {
+                return .empty()
+            }
+        }
     }
     
     /// observe viewWillAppear calls on all instances of current type
-    public static func onViewWillAppear() -> Observable<(controller: Base, animated: Bool)> {
-        return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCycleManager.instance.willAppear.subscribe(onNext: { (vc, animated) in
-                if let required = vc as? Base {
-                    observer.onNext((required, animated))
-                }
-            })
-        })
+    public static func onViewWillAppear() -> Signal<(controller: Base, animated: Bool)> {
+        return filterBase(ARViewControllerLifeCycleManager.instance.willAppear)
     }
     
     /// observe viewDidAppear calls on all instances of current type
-    public static func onViewDidAppear() -> Observable<(controller: Base, animated: Bool)> {
-        return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCycleManager.instance.didAppear.subscribe(onNext: { (vc, animated) in
-                if let required = vc as? Base {
-                    observer.onNext((required, animated))
-                }
-            })
-        })
+    public static func onViewDidAppear() -> Signal<(controller: Base, animated: Bool)> {
+        return filterBase(ARViewControllerLifeCycleManager.instance.didAppear)
     }
     
     /// observe viewWillDisappear calls on all instances of current type
-    public static func onViewWillDisappear() -> Observable<(controller: Base, animated: Bool)> {
-        return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCycleManager.instance.willDisappear.subscribe(onNext: { (vc, animated) in
-                if let required = vc as? Base {
-                    observer.onNext((required, animated))
-                }
-            })
-        })
+    public static func onViewWillDisappear() -> Signal<(controller: Base, animated: Bool)> {
+        return filterBase(ARViewControllerLifeCycleManager.instance.willDisappear)
     }
     
     /// observe viewDidDisappear calls on all instances of current type
-    public static func onViewDidDisappear() -> Observable<(controller: Base, animated: Bool)> {
-        return Observable.create({ observer -> Disposable in
-            return ARViewControllerLifeCycleManager.instance.didDisappear.subscribe(onNext: { (vc, animated) in
-                if let required = vc as? Base {
-                    observer.onNext((required, animated))
-                }
-            })
-        })
+    public static func onViewDidDisappear() -> Signal<(controller: Base, animated: Bool)> {
+        return filterBase(ARViewControllerLifeCycleManager.instance.didDisappear)
+    }
+    
+    private static func filterBase(_ publisher: PublishSubject<(controller: UIViewController,animated: Bool)>) -> Signal<(controller: Base, animated: Bool)> {
+        return publisher.asSignal(onErrorSignalWith: .empty()).flatMap{
+            if let required = $0 as? Base {
+                return .just((required, $1))
+            } else {
+                return .empty()
+            }
+        }
     }
 }
 

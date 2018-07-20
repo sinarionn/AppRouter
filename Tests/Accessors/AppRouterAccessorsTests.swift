@@ -24,7 +24,7 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertTrue(AppRouter.rootViewController is AppRouterPresenterTabBarController)
         XCTAssertTrue(AppRouter.topViewController is AppRouterPresenterNavigationController)
         
-        AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).push(animated: false)
+        try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).push(animated: false)
         XCTAssertTrue(AppRouter.rootViewController is AppRouterPresenterTabBarController)
         XCTAssertTrue(AppRouter.topViewController is AppRouterPresenterAdditionalController)
         
@@ -74,7 +74,7 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertFalse(second.isModal)
         XCTAssertFalse(nav.isModal)
         let expectation =  self.expectation(description: "")
-        nav.present(second, animated: false, completion: { _ in
+        nav.present(second, animated: false, completion: {
             XCTAssertTrue(second.isModal)
             XCTAssertFalse(first.isModal)
             XCTAssertFalse(nav.isModal)
@@ -94,7 +94,7 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertFalse(second.isModal)
         XCTAssertFalse(nav.isModal)
         let expectation =  self.expectation(description: "")
-        second.present(nav, animated: false, completion: { _ in
+        second.present(nav, animated: false, completion: {
             XCTAssertTrue(first.isModal)
             XCTAssertTrue(nav.isModal)
             XCTAssertFalse(second.isModal)
@@ -118,7 +118,7 @@ class AppRouterAccessorsTests: XCTestCase {
         XCTAssertFalse(nav.isModal)
         
         let expectation =  self.expectation(description: "")
-        second.present(nav, animated: false, completion: { _ in
+        second.present(nav, animated: false, completion: { 
             XCTAssertTrue(first.isModal)
             XCTAssertTrue(nav.isModal)
             XCTAssertFalse(second.isModal)

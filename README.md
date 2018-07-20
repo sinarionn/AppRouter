@@ -6,7 +6,16 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
 [![Packagist](https://img.shields.io/badge/license-MIT-blue.svg)]()
 
-Extremely easy way to handle controller creation / presentation / navigation and reduce coherence in project in general.
+Extremely easy way to handle controller creation / presentation / navigation and reduce coherence for project in general.
+
+- [Requirements](#requirements)
+- [Example](#example)
+- [Installation](#installation)
+- [Content](#content)
+  - [Easy accessors](#easy-accessors)
+  - [Easy controller construction/configuration/presentation](#easy-construction-configuration-presentation)
+  - [Completion handlers](#completion-handlers)
+  - [RxSwift extensions](#rxswift-extensions)
 
 ## Requirements
 
@@ -14,6 +23,42 @@ Extremely easy way to handle controller creation / presentation / navigation and
 - macOS 10.10+ (RxSwift subspec only)
 - Xcode 9+
 - Swift 4
+
+
+## Example
+
+ `1.` You may need to set your root controller at application start, just:
+
+ ```swift
+ try? MainTabBarController.presenter().setAsRoot()
+ ```
+
+ `2.` And at some point - to present search controller:
+
+ ```swift
+ try? SearchController.presenter().embedInNavigation().present()
+ ```
+
+ `3.` And then you want to push controller with user selected product:
+
+ ```swift
+ try? ProductDetailsController.presenter().configure{
+   $0.product = userSelectedProduct
+ }.push()
+ ```
+
+ Example before assumes you are using separate Storyboards for each controller Type.
+
+ **Note:** I recommend to have separate storyboards for each controller, so that for the each controller type you'll have separate folder with something like this:
+ ```
+ UIViewControllerType.storyboard
+ UIViewControllerType.swift
+ UIViewControllerTypeViewModel.swift
+ UIViewControllerTypeViewModelTests.swift
+ ```
+
+ And don't forget to mark your controller in storyboard as `initial`, this will allow you to use Presenter default configurations.
+
 
 ## Installation
 
@@ -23,33 +68,25 @@ Extremely easy way to handle controller creation / presentation / navigation and
 pod 'AppRouter'
 ```
 
+```ruby
+pod 'AppRouter/Route'
+```
+
 RxSwift extension for AppRouter with life cycle observables:
-**Warrning:** RxSwift subspec does not include `Core` anymore.
+**Warning:** RxSwift subspec does not include `Core` anymore.
 
 ```ruby
 pod 'AppRouter'
 pod 'AppRouter/RxSwift'
 ```
 
-### Carthages
+### Carthage
 
 ```ruby
 github "MLSDev/AppRouter"
 ```
 
-## Examples
-
-#### Presentations
-
-Imagine that you want to present some controller and for this you need other controller to present on. Usual way forces us to pass controller through weak properties or to use delegation mechanic. We can avoid this situation and just call:
-
-```swift
-AppRouter.topViewController?.present(newOne, animated: true, completion: nil)
-```  
-or even
-```swift
-newOne.presenter().present()
-```
+## Content
 
 #### Easy accessors
 ```swift
@@ -79,17 +116,58 @@ Of course it's always better to extract controller creation, configuration and p
 ```swift
 extension AppRouter {
   static func openGridPictureGalleryControllerWith(pictures: PicturesRepresentation) {
-    GridPictureGalleryController.presenter().fromStoryboard("GridPictureGallery").embedInNavigation().configure{
+    try? GridPictureGalleryController.presenter().fromStoryboard("GridPictureGallery").embedInNavigation().configure{
       $0.picturesRepresentation = pictures
     }.present()
   }
   static func openChangePasswordController() {
-    ChangePasswordViewController.presenter().push()
+    try? ChangePasswordViewController.presenter().push()
   }
 }
 ```
 
 **Note:** framework by default uses name of your UIViewController subclass (String(describing: controllerType)) as storyboard identifier and initial controller (or rootViewController on initial UINavigationController)
+
+In general - `presenter()` returns you configuration related to ViewController class it was called from.
+This configuration allows you to specify how to create controller, what needs to be done before presentation, where resulting controller should be presented or pushed and so on.
+
+All Configuration methods are documented, so read it before usage.
+Few available methods:
+##### Specifying source for the view controller:
+
+`func fromStoryboard(_ name: String?, initial : Bool)` - will try to create controller from specified storyboard.
+
+`func fromXib(_ name: String?)` - will try to create from Xib.
+
+`func from(provider: @escaping () throws -> T)` - will create using provided factory method.
+
+##### Specyfying destionation:
+
+`func onTop()` - AppRouter.topViewController will be used as target.
+
+`func onRoot()` - AppRouter.rootViewController will be used.
+
+`func on(_ provider: @escaping () throws -> UIViewController)` - will use provided controller
+
+**Note** that controller creation, target resolve and all other configuration steps will only be performed when `presentation methods` called (`push`, `present`, `setAsRoot`, `show`)
+
+##### Should controller be embedded in something?
+
+`func embedInNavigation(_ navigationController: @autoclosure @escaping () -> UINavigationController` - if you need to get controller inside UINavigationController.
+`func embedIn(_ embederBlock: @escaping (T) throws -> UIViewController)` - if you need some custom embed rules.  
+
+##### Additional configurations before performing present action:
+
+`func configure(_ label: CustomStringConvertible, _ configuration: @escaping (T) throws -> ())` - can be used to additionally configure controller.
+
+##### Showing controllers:
+
+`func present()` - this action will build your controller from source you specified, embed it if needed, configure with your additional configurations, resolve target to present on, and... present.
+
+`func push()` - same as previous, but needs target controller to be UINavigationController by itself or be inside one (UIViewController.navigationController property will be used). And pushes instead of presenting.
+
+`func show()` - action totally handled by you (you can setup it through `handleShow` method)
+
 
 #### Completion handlers
 
@@ -103,7 +181,7 @@ popToRootViewController(animated animated:, completion:)
 popToViewController<T: UIViewController>(_:, animated:, completion:)
 ```
 
-#### Closing controller
+#### How to close controller?
 
 Another possible scenario: feature controller that can be pushed or presented in different parts of application. Simplest way to make such controller gone (close button or etc) is to use close method. Just:
 ```swift
@@ -111,22 +189,37 @@ Another possible scenario: feature controller that can be pushed or presented in
   self.close()
 }
 ```
-And thats it. Method will try to detect the proper way to make controller gone.
+And thats it. Method will try to detect the proper way to make controller disappear.
 
 #### RxSwift extensions
 
 If you want some easy way to deal with controller lifecycle outside - try to use AppRouter/RxSwift subspec. It provides a bunch of Type and Instance observables around lifecycle methods (it uses swizzling underneath from the moment you subscribe) :
 
 ```swift
-instance.rx.onViewDidLoad() -> Observable<Void>
-instance.rx.onViewWillAppear() -> Observable<Bool>
-instance.rx.onViewDidAppear() -> Observable<Bool>
-instance.rx.onViewWillDisappear() -> Observable<Bool>
-instance.rx.onViewDidDisappear() -> Observable<Bool>
+instance.rx.onViewDidLoad() -> Signal<Void>
+instance.rx.onViewWillAppear() -> Signal<Bool>
+instance.rx.onViewDidAppear() -> Signal<Bool>
+instance.rx.onViewWillDisappear() -> Signal<Bool>
+instance.rx.onViewDidDisappear() -> Signal<Bool>
 
-Type.rx.onViewDidLoad() -> Observable<Type>
-Type.rx.onViewWillAppear() -> Observable<(controller: Type, animated: Bool)>
-Type.rx.onViewDidAppear() -> Observable<(controller: Type, animated: Bool)>
-Type.rx.onViewWillDisappear() -> Observable<(controller: Type, animated: Bool)>
-Type.rx.onViewDidDisappear() -> Observable<(controller: Type, animated: Bool)>
+Type.rx.onViewDidLoad() -> Signal<Type>
+Type.rx.onViewWillAppear() -> Signal<(controller: Type, animated: Bool)>
+Type.rx.onViewDidAppear() -> Signal<(controller: Type, animated: Bool)>
+Type.rx.onViewWillDisappear() -> Signal<(controller: Type, animated: Bool)>
+Type.rx.onViewDidDisappear() -> Signal<(controller: Type, animated: Bool)>
 ```
+
+#### Route subspec
+
+Advanced Presenter.Configuration called 'Route' to use with Dip, ReusableView in mvvm world.
+It provides an ability to resolve ViewController/ViewModel using viewModelFactory/viewFactory.
+
+
+## Author
+
+Artem Antihevich, sinarionn@gmail.com
+
+
+## License
+
+ReusableView is available under the MIT license. See the LICENSE file for more info.

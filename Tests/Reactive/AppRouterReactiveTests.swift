@@ -7,8 +7,9 @@
 //
 
 import XCTest
-import RxSwift
 import AppRouterRx
+import RxCocoa
+import RxSwift
 
 class AppRouterReactiveTests: XCTestCase {
     
@@ -17,11 +18,10 @@ class AppRouterReactiveTests: XCTestCase {
         let second = SecondController()
         let expectationOne = expectation(description: "")
         let expectationTwo = expectation(description: "")
-        _ = FirstController.rx.onViewDidLoad().subscribe(onNext: { _ in
+        _ = FirstController.rx.onViewDidLoad().emit(onNext: { _ in
             expectationOne.fulfill()
         })
-        
-        _ = first.rx.onViewDidLoad().subscribe(onNext: {
+        _ = first.rx.onViewDidLoad().emit(onNext: {
             expectationTwo.fulfill()
         })
         
@@ -35,12 +35,12 @@ class AppRouterReactiveTests: XCTestCase {
         let second = SecondController()
         let expectationOne = expectation(description: "")
         let expectationTwo = expectation(description: "")
-        _ = FirstController.rx.onViewWillAppear().subscribe(onNext: { (vc, animated) in
+        _ = FirstController.rx.onViewWillAppear().emit(onNext: { (vc, animated) in
             XCTAssertTrue(animated)
             expectationOne.fulfill()
         })
         
-        _ = first.rx.onViewWillAppear().subscribe(onNext: { animated in
+        _ = first.rx.onViewWillAppear().emit(onNext: { animated in
             XCTAssertTrue(animated)
             expectationTwo.fulfill()
         })
@@ -55,12 +55,12 @@ class AppRouterReactiveTests: XCTestCase {
         let second = SecondController()
         let expectationOne = expectation(description: "")
         let expectationTwo = expectation(description: "")
-        _ = FirstController.rx.onViewDidAppear().subscribe(onNext: { (vc, animated) in
+        _ = FirstController.rx.onViewDidAppear().emit(onNext: { (vc, animated) in
             XCTAssertTrue(animated)
             expectationOne.fulfill()
         })
         
-        _ = first.rx.onViewDidAppear().subscribe(onNext: { animated in
+        _ = first.rx.onViewDidAppear().emit(onNext: { animated in
             XCTAssertTrue(animated)
             expectationTwo.fulfill()
         })
@@ -75,12 +75,12 @@ class AppRouterReactiveTests: XCTestCase {
         let second = SecondController()
         let expectationOne = expectation(description: "")
         let expectationTwo = expectation(description: "")
-        _ = FirstController.rx.onViewWillDisappear().subscribe(onNext: { (vc, animated) in
+        _ = FirstController.rx.onViewWillDisappear().emit(onNext: { (vc, animated) in
             XCTAssertTrue(animated)
             expectationOne.fulfill()
         })
         
-        _ = first.rx.onViewWillDisappear().subscribe(onNext: { animated in
+        _ = first.rx.onViewWillDisappear().emit(onNext: { animated in
             XCTAssertTrue(animated)
             expectationTwo.fulfill()
         })
@@ -95,12 +95,12 @@ class AppRouterReactiveTests: XCTestCase {
         let second = SecondController()
         let expectationOne = expectation(description: "")
         let expectationTwo = expectation(description: "")
-        _ = FirstController.rx.onViewDidDisappear().subscribe(onNext: { (vc, animated) in
+        _ = FirstController.rx.onViewDidDisappear().emit(onNext: { (vc, animated) in
             XCTAssertTrue(animated)
             expectationOne.fulfill()
         })
         
-        _ = first.rx.onViewDidDisappear().subscribe(onNext: { animated in
+        _ = first.rx.onViewDidDisappear().emit(onNext: { animated in
             XCTAssertTrue(animated)
             expectationTwo.fulfill()
         })

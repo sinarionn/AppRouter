@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0](https://github.com/MLSDev/AppRouter/releases/tag/5.0.0)
+
+New 'AppRouter/Route' subspec.
+'AppRouter/RxSwift' methods uses Signal's instead of Observables.
+Presenter methods (push, present, setAsRoot) becomes throwable instead of returning optionals.
+New presenter configurable action called 'show'.
+Presenter supports multiple configurations (by providing different labels alongside configuration block)
+
+
 ## [4.1.0](https://github.com/MLSDev/AppRouter/releases/tag/4.1.0)
 
 Swift 4 migration.

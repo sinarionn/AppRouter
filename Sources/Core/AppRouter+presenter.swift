@@ -36,8 +36,11 @@ extension AppRouter.Presenter {
         /// Embeds source inside container (UINavigationController, UITabBarController, etc) which will be used for presentation
         var embedder : (T) throws -> UIViewController = { $0 }
         
+        /// handler, used as show action
+        var showHandler: (AppRouter.Presenter.Configuration<T>) throws -> T = { _ in throw Errors.notImplemented }
+        
         /// Configure source controller before presentation
-        var configurator: (T) throws -> () = { _ in }
+        open var configurations: [(label: String, block: (T) throws -> ())] = []
         
         /// Declare router.topViewController to be a **target** provider
         open func onTop() -> Self {
@@ -87,20 +90,30 @@ extension AppRouter.Presenter {
         }
         
         /// Declare **configuration** block which used to configure controller before presentation
+        /// Configurations will be called in the order they was added.
         ///
+        /// - parameter label: block label, only latest block will be stored for each label
         /// - parameter configuration: block allows to apply additional configuration before presenting
-        open func configure(_ configuration: @escaping (T) throws -> ()) -> Self {
-            self.configurator = configuration
+        open func configure(_ label: CustomStringConvertible, _ configuration: @escaping (T) throws -> ()) -> Self {
+            configurations = configurations.filter{ $0.label != label.description } + [(label.description, configuration)]
             return self
+        }
+        
+        /// Declare **configuration** block which used to configure controller before presentation
+        ///
+        /// - parameter configuration: block with default empty label, allows to apply additional configuration before presenting
+        open func configure(_ configuration: @escaping (T) throws -> ()) -> Self {
+            return configure("", configuration)
         }
         
         /// Declare **embedder** provider to embed controller in simple UINavigationController before presentation
         ///
         /// - parameter navigationController: set custom UINavigationController to be used
-        open func embedInNavigation(_ navigationController: UINavigationController = UINavigationController()) -> Self {
+        open func embedInNavigation(_ navigationController: @autoclosure @escaping () -> UINavigationController = UINavigationController()) -> Self {
             embedder = { source in
-                navigationController.viewControllers.append(source)
-                return navigationController
+                let nav = navigationController()
+                nav.viewControllers.append(source)
+                return nav
             }
             return self
         }
@@ -130,28 +143,23 @@ extension AppRouter.Presenter {
         /// - parameter completion: The block to execute after the view controller is pushed.
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func push(animated: Bool, completion: Func<Void, Void>? = nil) -> T? {
-            do {
-                let embedded = try provideEmbeddedSourceController()
-                guard !(embedded.parent is UINavigationController) else { throw Errors.tryingToPushNavigationController }
-                let targetController = try performTargetConstruction() as UIViewController
-                let targetNavigation = try targetController as? UINavigationController ??
-                                           targetController.navigationController ??
-                                           Errors.failedToFindNavigationControllerToPushOn.rethrow()
-                targetNavigation.pushViewController(embedded.parent, animated: animated, completion: completion)
-                return embedded.child
-            } catch {
-                AppRouter.print(error.localizedDescription)
-                return nil
-            }
+        open func push(animated: Bool, completion: Func<Void, Void>? = nil) throws -> T {
+            let embedded = try provideEmbeddedSourceController()
+            guard !(embedded.parent is UINavigationController) else { throw Errors.tryingToPushNavigationController }
+            let targetController = try performTargetConstruction() as UIViewController
+            let targetNavigation = try targetController as? UINavigationController ??
+                                       targetController.navigationController ??
+                                       Errors.failedToFindNavigationControllerToPushOn.rethrow()
+            targetNavigation.pushViewController(embedded.parent, animated: animated, completion: completion)
+            return embedded.child
         }
         
         /// Push current configuration
         ///
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func push() -> T? {
-            return push(animated: true)
+        open func push() throws -> T {
+            return try push(animated: true)
         }
         
         /// Present current configuration
@@ -160,24 +168,19 @@ extension AppRouter.Presenter {
         /// - parameter completion: The block to execute after the view controller is presented.
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func present(animated: Bool, completion: Func<Void, Void>? = nil) -> T? {
-            do {
-                let embedded = try provideEmbeddedSourceController()
-                let targetController = try performTargetConstruction() as UIViewController
-                targetController.present(embedded.parent, animated: animated, completion: completion)
-                return embedded.child
-            } catch {
-                AppRouter.print(error.localizedDescription)
-                return nil
-            }
+        open func present(animated: Bool, completion: Func<Void, Void>? = nil) throws -> T {
+            let embedded = try provideEmbeddedSourceController()
+            let targetController = try performTargetConstruction() as UIViewController
+            targetController.present(embedded.parent, animated: animated, completion: completion)
+            return embedded.child
         }
         
         /// Present current configuration
         ///
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func present() -> T? {
-            return present(animated: true)
+        open func present() throws -> T {
+            return try present(animated: true)
         }
 
         /// Set embedded controller as rootViewController
@@ -186,23 +189,34 @@ extension AppRouter.Presenter {
         /// - parameter completion: The block to execute after the view controller is setted.
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func setAsRoot(animation: AppRouter.Animators.AnimationType, completion: Func<Bool, Void>? = nil) -> T? {
-            do {
-                let embedded = try provideEmbeddedSourceController()
-                router.animator.setRoot(controller: embedded.parent, animation: animation, callback: completion)
-                return embedded.child
-            } catch {
-                AppRouter.print(error.localizedDescription)
-                return nil
-            }
+        open func setAsRoot(animation: AppRouter.Animators.AnimationType, completion: Func<Bool, Void>? = nil) throws -> T {
+            let embedded = try provideEmbeddedSourceController()
+            router.animator.setRoot(controller: embedded.parent, animation: animation, callback: completion)
+            return embedded.child
         }
         
         /// Set embedded controller as rootViewController with window crossDissolve animation
         ///
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func setAsRoot() -> T? {
-            return setAsRoot(animation: .window(options: .transitionCrossDissolve, duration: 0.3))
+        open func setAsRoot() throws -> T {
+            return try setAsRoot(animation: .window(options: .transitionCrossDissolve, duration: 0.3))
+        }
+        
+        /// Declare custom show action
+        ///
+        /// - parameter handler: block should return target viewController which will be used for presentation
+        open func handleShow(by handler: @escaping (AppRouter.Presenter.Configuration<T>) throws -> T) -> Self {
+            self.showHandler = handler
+            return self
+        }
+        
+        /// Performs custom show action, provided throug handleShow method.
+        ///
+        /// - returns: returns instance provided by `source` provider
+        @discardableResult
+        open func show() throws -> T {
+            return try showHandler(self)
         }
         
         /// Provides source controller already configured for use.
@@ -254,7 +268,7 @@ extension AppRouter.Presenter {
             } else {
                 _ = source.view
             }
-            return try configurator(source)
+            return try configurations.forEach{ try $0.block(source) }
         }
         
         public init(router: AppRouterType = AppRouter.shared) {
@@ -269,6 +283,7 @@ extension AppRouter.Presenter {
         case failedToEmbedSourceController
         case failedToFindNavigationControllerToPushOn
         case tryingToPushNavigationController
+        case notImplemented
         
         public var errorDescription: String? {
             switch self {
@@ -282,6 +297,8 @@ extension AppRouter.Presenter {
                 return "[AppRouter][Presenter] failed to find navigation controller (using target provider) to push on."
             case .tryingToPushNavigationController:
                 return "[AppRouter][Presenter] trying to push navigation controller (provided by source provider)."
+            case .notImplemented:
+                return "[AppRouter][Presenter] method not implemented."
             }
         }
     }
@@ -335,7 +352,7 @@ extension AppRouter.Presenter {
 }
 
 extension Error {
-    internal func rethrow<T>() throws -> T {
+    public func rethrow<T>() throws -> T {
         throw self
     }
 }

@@ -118,32 +118,70 @@ class AppRouterPresenterTests: XCTestCase {
     
     func testPresenterPresent() throws {
         XCTAssertTrue(AppRouter.topViewController == baseController)
-        let presented = AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).present(animated: false)
+        let presented = try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).present(animated: false)
         XCTAssertTrue(AppRouter.topViewController == presented)
         XCTAssertTrue(baseController?.presentedViewController == presented)
-        XCTAssertTrue(presented?.initialized == true)
-        XCTAssertNil(AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests", initial: true).present())
+        XCTAssertTrue(presented.initialized == true)
+        XCTAssertThrowsError(try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests", initial: true).present())
     }
     
     func testPresenterPush() throws {
         XCTAssertTrue(AppRouter.topViewController == baseController)
-        let pushed = AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).push(animated: false)
+        let pushed = try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).push(animated: false)
         XCTAssertTrue(AppRouter.topViewController == pushed)
-        XCTAssertTrue(pushed?.navigationController == navController)
-        XCTAssertTrue(pushed?.initialized == true)
-        XCTAssertNil(AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests").push())
+        XCTAssertTrue(pushed.navigationController == navController)
+        XCTAssertTrue(pushed.initialized == true)
+        XCTAssertThrowsError(try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests").push())
     }
     
     func testPresenterSetAsRoot() throws {
         XCTAssertTrue(AppRouter.topViewController == baseController)
-        let presented = AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).setAsRoot(animation: .none)
+        let presented = try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).setAsRoot(animation: .none)
         XCTAssertTrue(AppRouter.rootViewController == presented)
-        XCTAssertTrue(presented?.initialized == true)
-        XCTAssertNil(AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests", initial: true).setAsRoot())
+        XCTAssertTrue(presented.initialized == true)
+        XCTAssertThrowsError(try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests", initial: true).setAsRoot())
     }
     
     func testPresenterOnInstance() {
         let controller = UIViewController()
         XCTAssertTrue(try controller.presenter().provideSourceController() == controller)
+    }
+    
+    func testDefaultConfigurationsOverlapsPreviousOne() throws {
+        let presenter = CustomController().presenter()
+            .configure({ $0.testable += 1 })
+            .configure({ $0.testable += 2 })
+            .configure({ $0.testable += 5 })
+        XCTAssertEqual(try presenter.provideSourceController().testable, 5)
+    }
+    
+    func testLabeledConfigurationsOverlapsPreviousOne() throws {
+        let presenter = CustomController().presenter()
+            .configure("someLabel", { $0.testable += 1 })
+            .configure("someLabel", { $0.testable += 2 })
+            .configure("someLabel", { $0.testable += 5 })
+        XCTAssertEqual(try presenter.provideSourceController().testable, 5)
+    }
+    
+    func testDifferentLabelsInvokedInTheOrderTheyWasAdded() {
+        let presenter = CustomController().presenter()
+            .configure("first", { $0.order.append(1) })
+            .configure("second", { $0.order.append(2) })
+            .configure("third", { $0.order.append(3) })
+            .configure("second", { $0.order.append(22) }) // we are using same label, so previous one should be removed
+        XCTAssertEqual(try presenter.provideSourceController().order, [1, 3, 22])
+    }
+    
+    func testUnspecifiedShowThrowsError() {
+        XCTAssertThrowsError(try UIViewController().presenter().show())
+    }
+    
+    func testShowHandlerInvoked() throws {
+        var shown = false
+        try UIViewController().presenter().handleShow(by: {
+            shown = true
+            return try $0.provideSourceController()
+        }).show()
+        XCTAssertTrue(shown)
     }
 }

@@ -12,3 +12,7 @@ import UIKit
 class FirstController: UIViewController { }
 class SecondController: UIViewController { }
 class ThirdController: UIViewController { }
+class CustomController: UIViewController{
+    var testable: Int = 0
+    var order: [Int] = []
+}

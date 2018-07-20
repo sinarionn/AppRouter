@@ -11,7 +11,10 @@ extension BundleForClassInstantiable where Self : UIViewController {
     /// - parameter initial: If true - instantiates initial viewController and if it's UINavigationController - tries to take it rootViewController. If no - instantiates viewController with identifier String(self)
     /// - returns: controller instance if everything is ok
     public static func instantiate(storyboardName : String? = nil, initial : Bool = false) -> Self? {
-        return UIStoryboard(storyboardName ?? String(describing: self), bundle: Bundle(for: self)).instantiateViewController(self, initial: initial)
+        let storyboardName = storyboardName ?? String(describing: self)
+        let bundle = Bundle(for: self)
+        guard bundle.path(forResource: storyboardName, ofType: "storyboardc") != nil else { return nil }
+        return UIStoryboard(storyboardName, bundle: bundle).instantiateViewController(self, initial: initial)
     }
 }
 
@@ -25,8 +28,10 @@ extension UIViewController {
         return _instantiateFromXib(self, xibName: xibName ?? String(describing: self))
     }
     
-    fileprivate class func _instantiateFromXib<T : UIViewController>(_ : T.Type, xibName : String) -> T {
-        return T(nibName: xibName, bundle: Bundle(for: self))
+    fileprivate class func _instantiateFromXib<T : UIViewController>(_ : T.Type, xibName : String) -> T? {
+        let bundle = Bundle(for: self)
+        guard bundle.path(forResource: xibName, ofType: "nib") != nil else { return nil }
+        return T(nibName: xibName, bundle: bundle)
     }
 }
 
