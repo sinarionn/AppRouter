@@ -1,8 +1,6 @@
 import Foundation
 import UIKit
 
-public typealias Func<T, U> = (T) -> U
-
 /// Namespacing class 
 open class AppRouter {
     /// Provides default AppRouter instance
@@ -29,7 +27,7 @@ open class AppRouter {
     }
     
     /// Defines AppRouter output target
-    open static var debugOutput: (String) -> () = DebugOutput.nsLog.debugOutput
+    public static var debugOutput: (String) -> () = DebugOutput.nsLog.debugOutput
     internal static func print(_ str: String) {
         debugOutput(str)
     }

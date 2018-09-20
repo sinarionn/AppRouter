@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "AppRouter"
-  s.version      = "5.0.0"
+  s.version      = "5.1.0"
   s.summary      = "UIViewController creation, navigation, utility methods for easy routing"
 
   s.homepage     = "https://github.com/MLSDev/AppRouter"
@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
       route.subspec 'Dip' do |dip|
           dip.source_files = 'Sources/Route/*.swift'
-          dip.dependency 'Dip', '~> 6.0'
+          dip.dependency 'Dip', '~> 7.0'
           dip.ios.deployment_target = "9.0"
       end
   end

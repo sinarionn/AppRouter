@@ -143,7 +143,7 @@ extension AppRouter.Presenter {
         /// - parameter completion: The block to execute after the view controller is pushed.
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func push(animated: Bool, completion: Func<Void, Void>? = nil) throws -> T {
+        open func push(animated: Bool, completion: (()->())? = nil) throws -> T {
             let embedded = try provideEmbeddedSourceController()
             guard !(embedded.parent is UINavigationController) else { throw Errors.tryingToPushNavigationController }
             let targetController = try performTargetConstruction() as UIViewController
@@ -168,7 +168,7 @@ extension AppRouter.Presenter {
         /// - parameter completion: The block to execute after the view controller is presented.
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func present(animated: Bool, completion: Func<Void, Void>? = nil) throws -> T {
+        open func present(animated: Bool, completion: (()->())? = nil) throws -> T {
             let embedded = try provideEmbeddedSourceController()
             let targetController = try performTargetConstruction() as UIViewController
             targetController.present(embedded.parent, animated: animated, completion: completion)
@@ -189,7 +189,7 @@ extension AppRouter.Presenter {
         /// - parameter completion: The block to execute after the view controller is setted.
         /// - returns: returns instance provided by `source` provider
         @discardableResult
-        open func setAsRoot(animation: AppRouter.Animators.AnimationType, completion: Func<Bool, Void>? = nil) throws -> T {
+        open func setAsRoot(animation: AppRouter.Animators.AnimationType, completion: ((Bool)->())? = nil) throws -> T {
             let embedded = try provideEmbeddedSourceController()
             router.animator.setRoot(controller: embedded.parent, animation: animation, callback: completion)
             return embedded.child

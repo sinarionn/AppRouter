@@ -54,7 +54,12 @@ extension UIStoryboard {
         }
         if let navigation = controller as? UINavigationController {
             let first = navigation.viewControllers.first as? T
+            #if swift(>=4.2)
+            first?.removeFromParent()
+            #else
             first?.removeFromParentViewController()
+            #endif
+            
             return first
         }
         return nil

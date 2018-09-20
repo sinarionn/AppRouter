@@ -11,7 +11,7 @@ extension AppRouter {
         public struct RootAnimator {
             let router: AppRouterType
             
-            public func setRoot(controller: UIViewController, animation: AnimationType, callback: Func<Bool, Void>? = nil) {
+            public func setRoot(controller: UIViewController, animation: AnimationType, callback: ((Bool)->())? = nil) {
                 switch animation {
                 case .none:
                     router.rootViewController = controller
@@ -32,7 +32,7 @@ extension AppRouter {
             /// - parameter options: animation options used to animate transition.
             /// - parameter duration: animation duration
             /// - parameter callback: called after controller becomes rootViewController
-            public func setRootWithViewAnimation(_ controller: UIViewController, options: UIViewAnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: Func<Bool, Void>? = nil) {
+            public func setRootWithViewAnimation(_ controller: UIViewController, options: UIView.AnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: ((Bool)->())? = nil) {
                 if let rootController = router.rootViewController {
                     let oldState = UIView.areAnimationsEnabled
                     UIView.setAnimationsEnabled(false)
@@ -53,7 +53,7 @@ extension AppRouter {
             /// - parameter options: animation options used to animate transition.
             /// - parameter duration: animation duration
             /// - parameter callback: called after controller becomes rootViewController
-            public func setRootWithWindowAnimation(_ controller: UIViewController, options: UIViewAnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: Func<Bool, Void>? = nil) {
+            public func setRootWithWindowAnimation(_ controller: UIViewController, options: UIView.AnimationOptions = .transitionFlipFromLeft, duration: TimeInterval = 0.3, callback: ((Bool)->())? = nil) {
                 if let _ = router.rootViewController {
                     let oldState = UIView.areAnimationsEnabled
                     UIView.setAnimationsEnabled(false)
@@ -76,7 +76,7 @@ extension AppRouter {
             /// - parameter opacityTo: final snapshot opacity
             /// - parameter duration: animation duration
             /// - parameter callback: called after controller becomes rootViewController
-            public func setRootWithSnapshotAnimation(_ controller: UIViewController, upscaleTo: CGFloat = 1.2, opacityTo: Float = 0, duration: TimeInterval = 0.3, callback: Func<Bool, Void>? = nil) {
+            public func setRootWithSnapshotAnimation(_ controller: UIViewController, upscaleTo: CGFloat = 1.2, opacityTo: Float = 0, duration: TimeInterval = 0.3, callback: ((Bool)->())? = nil) {
                 if let _ = router.rootViewController, let snapshot:UIView = router.window.snapshotView(afterScreenUpdates: true) {
                     controller.view.addSubview(snapshot)
                     router.rootViewController = controller
@@ -96,8 +96,8 @@ extension AppRouter {
         
         public enum AnimationType {
             case none
-            case view(options: UIViewAnimationOptions, duration: TimeInterval)
-            case window(options: UIViewAnimationOptions, duration: TimeInterval)
+            case view(options: UIView.AnimationOptions, duration: TimeInterval)
+            case window(options: UIView.AnimationOptions, duration: TimeInterval)
             case snapshotUpscale(scaleTo: CGFloat, opacityTo: Float, duration: TimeInterval)
         }
     }
