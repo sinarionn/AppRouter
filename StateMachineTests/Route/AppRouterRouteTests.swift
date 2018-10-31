@@ -12,6 +12,7 @@ import ReusableView
 import RxSwift
 import RxCocoa
 import Dip
+import AppRouter
 
 class AppRouterRouteTests: XCTestCase {
     var disposeBag: DisposeBag!
@@ -22,7 +23,7 @@ class AppRouterRouteTests: XCTestCase {
         super.setUp()
         disposeBag = DisposeBag()
         factory = VirtualFactory()
-        route = Route(viewFactory: factory, viewModelFactory: factory).from(provider: TestableController.init)
+        route = Route(viewFactory: factory, viewModelFactory: factory, router: AppRouter.shared).from(provider: TestableController.init)
     }
     
     func testBuildView() {
@@ -89,7 +90,7 @@ class AppRouterRouteRxUtitlityTests: XCTestCase {
         super.setUp()
         disposeBag = DisposeBag()
         factory = VirtualFactory()
-        route = TestableRoute(viewFactory: factory, viewModelFactory: factory)
+        route = TestableRoute(viewFactory: factory, viewModelFactory: factory, router: AppRouter.shared)
     }
     func testRxUtilityPresent() {
         Observable.just(route).present().disposed(by: disposeBag)

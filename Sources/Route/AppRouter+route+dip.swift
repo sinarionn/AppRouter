@@ -38,3 +38,22 @@ extension DependencyContainer: ViewFactoryType {
         }
     }
 }
+
+extension DependencyContainer: ViewModelFactoryType {
+    public func buildViewModel<T>() throws -> T {
+        return try resolve()
+    }
+    
+    public func buildViewModel<T, ARG>(arg: ARG) throws -> T {
+        return try resolve(arguments: arg)
+    }
+    
+    public func buildViewModel<T, ARG, ARG2>(arg: ARG, arg2: ARG2) throws -> T {
+        return try resolve(arguments: arg, arg2)
+    }
+    
+    public func buildViewModel<T, ARG, ARG2, ARG3>(arg: ARG, arg2: ARG2, arg3: ARG3) throws -> T {
+        return try resolve(arguments: arg, arg2, arg3)
+    }
+}
+

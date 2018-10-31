@@ -78,4 +78,44 @@ open class AppRouter {
             }
         }
     }
+
+    /// Accessors
+    /// Current keyWindow rootViewController
+    open var rootViewController : UIViewController? {
+        get { return window.rootViewController }
+        set { window.rootViewController = newValue }
+    }
+    
+    /// Current topmost controller
+    open var topViewController : UIViewController? {
+        return topViewController()
+    }
+    
+    /// recursively tries to detect topmost controller
+    /// - parameter startingFrom: Specify controller which will be used as start point for searching
+    /// - returns: returns top-most controller if exists
+    open func topViewController(startingFrom base: UIViewController? = rootViewController) -> UIViewController? {
+        if let topper = base?.toppestControllerFromCurrent() { return topViewController(startingFrom: topper) ?? base }
+        return base
+    }
+    
+    // Backwards compatibility part
+    
+    /// Current keyWindow rootViewController
+    public class var rootViewController : UIViewController? {
+        get { return AppRouter.shared.rootViewController }
+        set { AppRouter.shared.rootViewController = newValue }
+    }
+    
+    /// Current topmost controller
+    public class var topViewController : UIViewController? {
+        return topViewController()
+    }
+    
+    /// recursively tries to detect topmost controller
+    /// - parameter startingFrom: Specify controller which will be used as start point for searching
+    /// - returns: returns top-most controller if exists
+    public class func topViewController(startingFrom base: UIViewController? = rootViewController) -> UIViewController? {
+        return AppRouter.shared.topViewController(startingFrom: base)
+    }
 }

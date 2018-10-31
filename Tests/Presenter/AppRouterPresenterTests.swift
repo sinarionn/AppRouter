@@ -8,6 +8,12 @@
 
 import XCTest
 @testable import AppRouter
+#if canImport(AppRouterExtensionAPI)
+import AppRouterExtensionAPI
+#endif
+#if canImport(AppRouterLight)
+import AppRouterLight
+#endif
 
 class AppRouterPresenterTests: XCTestCase {
     weak var tabBarController: AppRouterPresenterTabBarController!
@@ -136,7 +142,7 @@ class AppRouterPresenterTests: XCTestCase {
     
     func testPresenterSetAsRoot() throws {
         XCTAssertTrue(AppRouter.topViewController == baseController)
-        let presented = try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).setAsRoot(animation: .none)
+        let presented = try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterPresenterControllers", initial: false).configure({ $0.initialized = true }).setAsRoot(animator: ARAnimators.SimpleSetRootAnimator().animate)
         XCTAssertTrue(AppRouter.rootViewController == presented)
         XCTAssertTrue(presented.initialized == true)
         XCTAssertThrowsError(try AppRouterPresenterAdditionalController.presenter().fromStoryboard("AppRouterInstantiationsTests", initial: true).setAsRoot())

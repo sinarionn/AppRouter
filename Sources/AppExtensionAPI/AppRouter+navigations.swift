@@ -1,16 +1,6 @@
 import Foundation
 import UIKit
 
-extension AppRouter {
-    /// Utility method to pop topmost viewController
-    ///
-    /// - parameter animated: defines if popping should be animated
-    /// - parameter completion: called after successful popping
-    public class func popFromTopNavigation(animated: Bool = true, completion: (()->())? = nil) {
-        _ = topViewController()?.navigationController?.popViewController(animated: animated, completion: completion)
-    }
-}
-
 /// Additional abilities to close / dismiss/ pop controllers
 extension UIViewController {
     /// Pop to previous controller in navigation stack. Do nothing if current is first
@@ -21,11 +11,11 @@ extension UIViewController {
     @discardableResult
     public func pop(animated: Bool = true, completion: (()->())? = nil) -> [UIViewController]? {
         guard let stack = navigationController?.viewControllers , stack.count > 1 else {
-            AppRouter.print("#[AppRouter] can't pop \"\(String(describing: self))\" when only one controller in navigation stack!")
+            print("#[AppRouter] can't pop \"\(String(describing: self))\" when only one controller in navigation stack!")
             return nil
         }
         guard let first = stack.first , first != self else {
-            AppRouter.print("#[AppRouter] can't pop from \"\(String(describing: self))\" because it's first in stack!")
+            print("#[AppRouter] can't pop from \"\(String(describing: self))\" because it's first in stack!")
             return nil
         }
         var previousViewController = first
@@ -69,7 +59,7 @@ extension UIViewController {
         } else if isModal {
             dismiss(animated: animated, completion: completion)
         } else {
-            AppRouter.print("#[AppRouter] can't close \"\(String(describing: self))\".")
+            print("#[AppRouter] can't close \"\(String(describing: self))\".")
             return false
         }
         return true
@@ -139,7 +129,7 @@ extension UINavigationController {
     /// - parameter animated: Set this value to true to animate the transition
     /// - parameter completion: Called after transition ends successfully
     public func pushViewController(_ viewController: UIViewController, animated: Bool, completion: (()->())?) {
-        guard !viewControllers.contains(viewController) else { return AppRouter.print("#[AppRouter] can't push \"\(String(describing: type(of: viewController)))\", already in navigation stack!") }
+        guard !viewControllers.contains(viewController) else { return print("#[AppRouter] can't push \"\(String(describing: type(of: viewController)))\", already in navigation stack!") }
         pushViewController(viewController, animated: animated)
         _сoordinator(animated, completion: completion)
     }

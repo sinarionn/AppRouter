@@ -8,6 +8,12 @@
 
 import XCTest
 import AppRouter
+#if canImport(AppRouterExtensionAPI)
+import AppRouterExtensionAPI
+#endif
+#if canImport(AppRouterLight)
+import AppRouterLight
+#endif
 
 class AppRouterNavigationsTests: XCTestCase {
     
@@ -49,22 +55,6 @@ class AppRouterNavigationsTests: XCTestCase {
         XCTAssertTrue(nav.topViewController == second)
         XCTAssertNil(nav.popToViewController(AppRouterPresenterTabBarController.self, animated: false))
         
-        waitForExpectations(timeout: 1, handler: nil)
-    }
-    
-    func testPopFromTop() {
-        let nav = UINavigationController()
-        let first = AppRouterPresenterBaseController()
-        let second = AppRouterPresenterAdditionalController()
-        nav.viewControllers = [first, second]
-        AppRouter.rootViewController = nav
-
-        XCTAssertTrue(AppRouter.topViewController == second)
-        let expectation =  self.expectation(description: "")
-        AppRouter.popFromTopNavigation(animated: false, completion: {
-            XCTAssertTrue(AppRouter.topViewController == first)
-            expectation.fulfill()
-        })
         waitForExpectations(timeout: 1, handler: nil)
     }
     

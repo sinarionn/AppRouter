@@ -3,7 +3,12 @@ import UIKit
 import RxSwift
 import RxCocoa
 import ReusableView
-import AppRouter
+#if canImport(AppRouterExtensionAPI)
+import AppRouterExtensionAPI
+#endif
+#if canImport(AppRouterLight)
+import AppRouterLight
+#endif
 
 public protocol ViewFactoryType {
     func buildView<T>() throws -> T where T: UIViewController
@@ -27,13 +32,13 @@ public protocol BasicRouteProtocol {
     func onWeak(_ controller: UIViewController?) -> Self
 }
 
-open class Route<T: UIViewController> : AppRouter.Presenter.Configuration<T> where T: ViewModelHolderType{
+open class Route<T: UIViewController> : ARConfiguration<T> where T: ViewModelHolderType{
     open var viewModelProvider: () throws -> T.ViewModelType? = { nil }
     
     public let viewFactory: ViewFactoryType
     public let viewModelFactory: ViewModelFactoryType
     
-    public init(viewFactory: ViewFactoryType, viewModelFactory: ViewModelFactoryType, router: AppRouterType = AppRouter.shared) {
+    public init(viewFactory: ViewFactoryType, viewModelFactory: ViewModelFactoryType, router: AppRouterType) {
         self.viewFactory = viewFactory
         self.viewModelFactory = viewModelFactory
         super.init(router: router)
@@ -110,10 +115,10 @@ extension ObservableConvertibleType where Self.E: BasicRouteProtocol {
     }
 }
 
-extension AppRouter.Presenter.Configuration: BasicRouteProtocol {
+extension ARConfiguration: BasicRouteProtocol {
     public func onWeak(_ controller: UIViewController?) -> Self {
         return on({ [weak controller] in
-            return try controller ?? AppRouter.Presenter.Errors.failedToConstructTargetController.rethrow()
+            return try controller ?? ARConfigurationErrors.failedToConstructTargetController.rethrow()
         })
     }
 }

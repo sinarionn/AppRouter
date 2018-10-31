@@ -8,6 +8,12 @@
 
 import XCTest
 @testable import AppRouter
+#if canImport(AppRouterExtensionAPI)
+import AppRouterExtensionAPI
+#endif
+#if canImport(AppRouterLight)
+import AppRouterLight
+#endif
 
 class AppRouterAnimationsTests: XCTestCase {
     
@@ -19,11 +25,11 @@ class AppRouterAnimationsTests: XCTestCase {
         let first = AppRouterPresenterBaseController()
         let second = AppRouterPresenterAdditionalController()
         
-        AppRouter.shared.animator.setRootWithViewAnimation(first, duration: 0)
+        ARAnimators.ViewRootAnimator(duration: 0).animate(router: AppRouter.shared, controller: first)
         XCTAssertTrue(AppRouter.rootViewController == first)
         
         let expectation =  self.expectation(description: "")
-        AppRouter.shared.animator.setRootWithViewAnimation(second, duration: 0, callback: { _ in
+        ARAnimators.ViewRootAnimator(duration: 0).animate(router: AppRouter.shared, controller: second, completion: { _ in
             XCTAssertTrue(AppRouter.rootViewController == second)
             expectation.fulfill()
         })
@@ -34,14 +40,23 @@ class AppRouterAnimationsTests: XCTestCase {
         let first = AppRouterPresenterBaseController()
         let second = AppRouterPresenterAdditionalController()
         
-        AppRouter.shared.animator.setRootWithWindowAnimation(first, duration: 0)
+        ARAnimators.WindowRootAnimator(duration: 0).animate(router: AppRouter.shared, controller: first)
         XCTAssertTrue(AppRouter.rootViewController == first)
         
         let expectation =  self.expectation(description: "")
-        AppRouter.shared.animator.setRootWithWindowAnimation(second, duration: 0, callback: { _ in
+        ARAnimators.WindowRootAnimator(duration: 0).animate(router: AppRouter.shared, controller: second, completion: { _ in
             XCTAssertTrue(AppRouter.rootViewController == second)
             expectation.fulfill()
         })
+//
+//        AppRouter.shared.animator.setRootWithWindowAnimation(first, duration: 0)
+//        XCTAssertTrue(AppRouter.rootViewController == first)
+//
+//        let expectation =  self.expectation(description: "")
+//        AppRouter.shared.animator.setRootWithWindowAnimation(second, duration: 0, callback: { _ in
+//            XCTAssertTrue(AppRouter.rootViewController == second)
+//            expectation.fulfill()
+//        })
         waitForExpectations(timeout: 1, handler: nil)
     }
     
@@ -49,14 +64,25 @@ class AppRouterAnimationsTests: XCTestCase {
         let first = AppRouterPresenterBaseController()
         let second = AppRouterPresenterAdditionalController()
         
-        AppRouter.shared.animator.setRootWithSnapshotAnimation(first, duration: 0)
+        ARAnimators.SnapshotUpscaleRootAnimator(duration: 0).animate(router: AppRouter.shared, controller: first)
         XCTAssertTrue(AppRouter.rootViewController == first)
         
         let expectation =  self.expectation(description: "")
-        AppRouter.shared.animator.setRootWithSnapshotAnimation(second, duration: 0, callback: { _ in
+        ARAnimators.SnapshotUpscaleRootAnimator(duration: 0).animate(router: AppRouter.shared, controller: second, completion: { _ in
             XCTAssertTrue(AppRouter.rootViewController == second)
             expectation.fulfill()
         })
+//
+//
+//
+//        AppRouter.shared.animator.setRootWithSnapshotAnimation(first, duration: 0)
+//        XCTAssertTrue(AppRouter.rootViewController == first)
+//
+//        let expectation =  self.expectation(description: "")
+//        AppRouter.shared.animator.setRootWithSnapshotAnimation(second, duration: 0, callback: { _ in
+//            XCTAssertTrue(AppRouter.rootViewController == second)
+//            expectation.fulfill()
+//        })
         waitForExpectations(timeout: 1, handler: nil)
     }
 }
