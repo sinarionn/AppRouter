@@ -90,27 +90,47 @@ open class Route<T: UIViewController> : ARConfiguration<T> where T: ViewModelHol
 extension ObservableConvertibleType where Self.E: BasicRouteProtocol {
     public func push() -> Disposable {
         return self.asObservable().bind(onNext: {
-            _ = try? $0.push()
+            do {
+                try $0.push()
+            } catch {
+                print("[Route] failed to push: \(error)")
+            }
         })
     }
     public func push(on controller: UIViewController) -> Disposable {
         return self.asObservable().bind(onNext: { [weak controller] in
-            _ = try? $0.onWeak(controller).push()
+            do {
+                try $0.onWeak(controller).push()
+            } catch {
+                print("[Route] failed to push: \(error)")
+            }
         })
     }
     public func present() -> Disposable {
         return self.asObservable().bind(onNext: {
-            _ = try? $0.present()
+            do {
+                try $0.present()
+            } catch {
+                print("[Route] failed to present: \(error)")
+            }
         })
     }
     public func setAsRoot() -> Disposable {
         return self.asObservable().bind(onNext: {
-            _ = try? $0.setAsRoot()
+            do {
+                try $0.setAsRoot()
+            } catch {
+                print("[Route] failed to set as root: \(error)")
+            }
         })
     }
     public func show() -> Disposable {
         return self.asObservable().bind(onNext: {
-            _ = try? $0.show()
+            do {
+                try $0.show()
+            } catch {
+                print("[Route] failed to show: \(error)")
+            }
         })
     }
 }
