@@ -160,12 +160,13 @@ class TestableRoute<T: UIViewController>: Route<T> where T: ViewModelHolderType 
     var setAsRootWasCalled = false
     var showWasCalled = false
     
-    override func present() throws -> T {
+    
+    override func present(animated: Bool, completion: (() -> ())?) throws -> T {
         presentWasCalled = true
         throw "Error"
     }
     
-    override func push() throws -> T {
+    override func push(animated: Bool, completion: (() -> ())?) throws -> T {
         pushWasCalled = true
         throw "Error"
     }
@@ -175,7 +176,7 @@ class TestableRoute<T: UIViewController>: Route<T> where T: ViewModelHolderType 
         throw "Error"
     }
     
-    override func show() throws -> T {
+    override func show(animated: Bool, completion: (() -> ())?) throws -> T {
         showWasCalled = true
         throw "Error"
     }

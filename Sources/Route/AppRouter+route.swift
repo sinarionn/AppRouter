@@ -26,9 +26,12 @@ public protocol BasicRouteProtocol {
     associatedtype RouteTarget
     
     @discardableResult func push() throws -> RouteTarget
+    @discardableResult func push(animated: Bool, completion: (()->())?) throws -> RouteTarget
     @discardableResult func present() throws -> RouteTarget
+    @discardableResult func present(animated: Bool, completion: (()->())?) throws -> RouteTarget
     @discardableResult func setAsRoot() throws -> RouteTarget
     @discardableResult func show() throws -> RouteTarget
+    @discardableResult func show(animated: Bool, completion: (()->())?) throws -> RouteTarget
     func onWeak(_ controller: UIViewController?) -> Self
 }
 
@@ -88,28 +91,28 @@ open class Route<T: UIViewController> : ARConfiguration<T> where T: ViewModelHol
 }
 
 extension ObservableConvertibleType where Self.E: BasicRouteProtocol {
-    public func push() -> Disposable {
+    public func push(animated: Bool = true, completion: (()->())? = nil) -> Disposable {
         return self.asObservable().bind(onNext: {
             do {
-                try $0.push()
+                try $0.push(animated: animated, completion: completion)
             } catch {
                 print("[Route] failed to push: \(error)")
             }
         })
     }
-    public func push(on controller: UIViewController) -> Disposable {
+    public func push(on controller: UIViewController, animated: Bool = true, completion: (()->())? = nil) -> Disposable {
         return self.asObservable().bind(onNext: { [weak controller] in
             do {
-                try $0.onWeak(controller).push()
+                try $0.onWeak(controller).push(animated: animated, completion: completion)
             } catch {
                 print("[Route] failed to push: \(error)")
             }
         })
     }
-    public func present() -> Disposable {
+    public func present(animated: Bool = true, completion: (()->())? = nil) -> Disposable {
         return self.asObservable().bind(onNext: {
             do {
-                try $0.present()
+                try $0.present(animated: animated, completion: completion)
             } catch {
                 print("[Route] failed to present: \(error)")
             }
@@ -124,10 +127,10 @@ extension ObservableConvertibleType where Self.E: BasicRouteProtocol {
             }
         })
     }
-    public func show() -> Disposable {
+    public func show(animated: Bool = true, completion: (()->())? = nil) -> Disposable {
         return self.asObservable().bind(onNext: {
             do {
-                try $0.show()
+                try $0.show(animated: animated, completion: completion)
             } catch {
                 print("[Route] failed to show: \(error)")
             }

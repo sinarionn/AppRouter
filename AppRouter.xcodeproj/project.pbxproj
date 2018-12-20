@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C004848321CBBB3B00381037 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5C2109C87D00E42364 /* RxCocoa.framework */; };
+		C004848421CBBB3E00381037 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5E2109C87D00E42364 /* RxSwift.framework */; };
+		C004848521CBBB9200381037 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5C2109C87D00E42364 /* RxCocoa.framework */; };
+		C004848621CBBB9200381037 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5C2109C87D00E42364 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C004848721CBBB9200381037 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5E2109C87D00E42364 /* RxSwift.framework */; };
+		C004848821CBBB9200381037 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5E2109C87D00E42364 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C004848921CBBBBC00381037 /* Dip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5F2109C87D00E42364 /* Dip.framework */; };
+		C004848A21CBBBC400381037 /* Dip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5F2109C87D00E42364 /* Dip.framework */; };
+		C004848B21CBBBC400381037 /* Dip.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5F2109C87D00E42364 /* Dip.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C004848C21CBBBC700381037 /* ReusableView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5D2109C87D00E42364 /* ReusableView.framework */; };
+		C004848D21CBBBC700381037 /* ReusableView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5D2109C87D00E42364 /* ReusableView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C0388C602109C88800E42364 /* Dip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5F2109C87D00E42364 /* Dip.framework */; };
 		C0388C612109C88800E42364 /* ReusableView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5D2109C87D00E42364 /* ReusableView.framework */; };
 		C0388C622109C88800E42364 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0388C5C2109C87D00E42364 /* RxCocoa.framework */; };
@@ -152,9 +163,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C004848D21CBBBC700381037 /* ReusableView.framework in Embed Frameworks */,
 				C0D917852189EB18009BFB47 /* AppRouterExtensionAPI.framework in Embed Frameworks */,
+				C004848B21CBBBC400381037 /* Dip.framework in Embed Frameworks */,
 				C0D917792189EB18009BFB47 /* AppRouter.framework in Embed Frameworks */,
+				C004848821CBBB9200381037 /* RxSwift.framework in Embed Frameworks */,
 				C0D9177D2189EB18009BFB47 /* AppRouterRx.framework in Embed Frameworks */,
+				C004848621CBBB9200381037 /* RxCocoa.framework in Embed Frameworks */,
 				C0D917812189EB18009BFB47 /* AppRouterRoute.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -227,9 +242,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C004848C21CBBBC700381037 /* ReusableView.framework in Frameworks */,
 				C0D917842189EB18009BFB47 /* AppRouterExtensionAPI.framework in Frameworks */,
+				C004848A21CBBBC400381037 /* Dip.framework in Frameworks */,
 				C0D917782189EB18009BFB47 /* AppRouter.framework in Frameworks */,
+				C004848721CBBB9200381037 /* RxSwift.framework in Frameworks */,
 				C0D9177C2189EB18009BFB47 /* AppRouterRx.framework in Frameworks */,
+				C004848521CBBB9200381037 /* RxCocoa.framework in Frameworks */,
 				C0D917802189EB18009BFB47 /* AppRouterRoute.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0D9174D2189E5F8009BFB47 /* AppRouterExtensionAPI.framework in Frameworks */,
+				C004848921CBBBBC00381037 /* Dip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +286,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C004848321CBBB3B00381037 /* RxCocoa.framework in Frameworks */,
+				C004848421CBBB3E00381037 /* RxSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1339,7 +1361,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = mlsdev.AppRouter.route;
+				PRODUCT_BUNDLE_IDENTIFIER = mlsdev.AppRouter.route.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1363,7 +1385,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = mlsdev.AppRouter.route;
+				PRODUCT_BUNDLE_IDENTIFIER = mlsdev.AppRouter.route.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

@@ -184,9 +184,9 @@ class AppRouterPresenterTests: XCTestCase {
     
     func testShowHandlerInvoked() throws {
         var shown = false
-        try UIViewController().presenter().handleShow(by: {
+        try UIViewController().presenter().handleShow(by: { route,_,_ in
             shown = true
-            return try $0.provideSourceController()
+            return try route.provideSourceController()
         }).show()
         XCTAssertTrue(shown)
     }

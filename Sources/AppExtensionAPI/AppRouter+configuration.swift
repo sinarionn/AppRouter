@@ -20,7 +20,7 @@ open class ARConfiguration<T: UIViewController> {
     var embedder : (T) throws -> UIViewController = { $0 }
     
     /// handler, used as show action
-    var showHandler: (ARConfiguration<T>) throws -> T = { _ in throw ARConfigurationErrors.notImplemented }
+    var showHandler: (ARConfiguration<T>, Bool, (()->())?) throws -> T = { _, _, _ in throw ARConfigurationErrors.notImplemented }
     
     /// Configure source controller before presentation
     open var configurations: [(label: String, block: (T) throws -> ())] = []
@@ -191,7 +191,7 @@ open class ARConfiguration<T: UIViewController> {
     /// Declare custom show action
     ///
     /// - parameter handler: block should return target viewController which will be used for presentation
-    open func handleShow(by handler: @escaping (ARConfiguration<T>) throws -> T) -> Self {
+    open func handleShow(by handler: @escaping (ARConfiguration<T>, Bool, (()->())?) throws -> T) -> Self {
         self.showHandler = handler
         return self
     }
@@ -201,7 +201,15 @@ open class ARConfiguration<T: UIViewController> {
     /// - returns: returns instance provided by `source` provider
     @discardableResult
     open func show() throws -> T {
-        return try showHandler(self)
+        return try show(animated: true)
+    }
+    
+    /// Performs custom show action, provided throug handleShow method.
+    ///
+    /// - returns: returns instance provided by `source` provider
+    @discardableResult
+    open func show(animated: Bool, completion: (()->())? = nil) throws -> T {
+        return try showHandler(self, animated, completion)
     }
     
     /// Provides source controller already configured for use.
