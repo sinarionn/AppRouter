@@ -90,7 +90,7 @@ open class Route<T: UIViewController> : ARConfiguration<T> where T: ViewModelHol
     }
 }
 
-extension ObservableConvertibleType where Self.E: BasicRouteProtocol {
+extension ObservableConvertibleType where Self.Element: BasicRouteProtocol {
     public func push(animated: Bool = true, completion: (()->())? = nil) -> Disposable {
         return self.asObservable().bind(onNext: {
             do {

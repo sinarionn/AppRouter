@@ -30,7 +30,7 @@ extension AppRouter.Presenter {
 }
 
 /// Workaround to use Self as generic constraint in method
-public protocol ARControllerConfigurableProtocol : class {}
+public protocol ARControllerConfigurableProtocol : AnyObject {}
 extension UIViewController : ARControllerConfigurableProtocol {}
 extension ARControllerConfigurableProtocol where Self: UIViewController {
     /// Presentation configurator. Defaults: -onTop -fromStoryboard

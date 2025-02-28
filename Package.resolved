@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ReusableView",
+        "repositoryURL": "https://github.com/sinarionn/ReusableView.git",
+        "state": {
+          "branch": null,
+          "revision": "48d40573e604cd2c343633236fcd58e552f90e84",
+          "version": "3.0.0"
+        }
+      },
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "5dd1907d64f0d36f158f61a466bab75067224893",
+          "version": "6.9.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

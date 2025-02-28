@@ -11,7 +11,6 @@ import AppRouterRoute
 import ReusableView
 import RxSwift
 import RxCocoa
-import Dip
 import AppRouter
 
 class AppRouterRouteTests: XCTestCase {
@@ -117,34 +116,34 @@ class AppRouterRouteRxUtitlityTests: XCTestCase {
     }
 }
 
-class ViewFactoryTests: XCTestCase {
-    let container = DependencyContainer()
-    
-    override func tearDown() {
-        super.tearDown()
-        container.reset()
-    }
-    
-    func testBuildView() {
-        do {
-            let vc = try container.buildView() as ViewFactoryTestableViewController
-            XCTAssertNotNil(vc)
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
-    }
-    func testBuildViewWithArg() {
-        do {
-            let vc = try container.buildView(arg: "234") as ViewFactoryTestableViewController
-            XCTAssertNotNil(vc)
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
-    }
-    func testThrowsErrorOnControllerWithoutOwnStoryboard() {
-        XCTAssertThrowsError(try container.buildView() as AppRouterInstantiationsTestsViewController)
-    }
-}
+//class ViewFactoryTests: XCTestCase {
+//    let container = DependencyContainer()
+//    
+//    override func tearDown() {
+//        super.tearDown()
+//        container.reset()
+//    }
+//    
+//    func testBuildView() {
+//        do {
+//            let vc = try container.buildView() as ViewFactoryTestableViewController
+//            XCTAssertNotNil(vc)
+//        } catch {
+//            XCTFail(error.localizedDescription)
+//        }
+//    }
+//    func testBuildViewWithArg() {
+//        do {
+//            let vc = try container.buildView(arg: "234") as ViewFactoryTestableViewController
+//            XCTAssertNotNil(vc)
+//        } catch {
+//            XCTFail(error.localizedDescription)
+//        }
+//    }
+//    func testThrowsErrorOnControllerWithoutOwnStoryboard() {
+//        XCTAssertThrowsError(try container.buildView() as AppRouterInstantiationsTestsViewController)
+//    }
+//}
 
 
 class TestableController: UIViewController, ReusableType {

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.0](https://github.com/MLSDev/AppRouter/releases/tag/6.0.0)
+
+SPM support added.
+
+
 ## [5.1.0](https://github.com/MLSDev/AppRouter/releases/tag/5.1.0)
 
 XCode 10 and swift 4.2 fixes.

@@ -61,7 +61,16 @@ open class AppRouter {
             case .static(let window):
                 return window
             case .dynamic:
-                guard let delegate = UIApplication.shared.delegate else { fatalError("no appDelegate found") }
+                guard let delegate = UIApplication.shared.delegate else {
+                    if #available(iOS 13.0, *) {
+                        guard let window = UIApplication.shared.connectedScenes.first.flatMap({ $0 as? UIWindowScene })?.windows.filter({$0.isKeyWindow}).first else {
+                            fatalError("no appDelegate found")
+                        }
+                        return window
+                    } else {
+                        fatalError("no appDelegate found")
+                    }
+                }
                 if let windowProperty = delegate.window {
                     if let window = windowProperty {
                         return window

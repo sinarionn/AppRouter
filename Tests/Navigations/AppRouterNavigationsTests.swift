@@ -300,8 +300,7 @@ class AppRouterNavigationsTests: XCTestCase {
 
 }
 
-internal func delay(_ delay:Double, _ closure:@escaping ()->()) {
-    DispatchQueue.main.asyncAfter(
-        deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
+internal func delay(_ delay: TimeInterval, _ action: @escaping () -> ()) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: action)
 }
     
