@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7759C01A2D722AD3006CB7FD /* ReusableView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7767F4762D7205F200BFCA35 /* ReusableView.framework */; };
+		7759C01B2D722AD3006CB7FD /* ReusableView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7767F4762D7205F200BFCA35 /* ReusableView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		776F7CDD2D72214C0086678B /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7767F45E2D7205E200BFCA35 /* RxCocoa.framework */; };
 		776F7CDE2D72214C0086678B /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7767F45E2D7205E200BFCA35 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		776F7CDF2D72214C0086678B /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7767F45C2D7205E200BFCA35 /* RxSwift.framework */; };
@@ -252,6 +254,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				776F7CE02D72214C0086678B /* RxSwift.framework in Embed Frameworks */,
+				7759C01B2D722AD3006CB7FD /* ReusableView.framework in Embed Frameworks */,
 				776F7CDE2D72214C0086678B /* RxCocoa.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -400,6 +403,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7759C01A2D722AD3006CB7FD /* ReusableView.framework in Frameworks */,
 				776F7CDD2D72214C0086678B /* RxCocoa.framework in Frameworks */,
 				C0D9174D2189E5F8009BFB47 /* AppRouterExtensionAPI.framework in Frameworks */,
 				776F7CDF2D72214C0086678B /* RxSwift.framework in Frameworks */,

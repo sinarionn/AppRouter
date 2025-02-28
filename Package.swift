@@ -8,20 +8,20 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "AppRouter-AppExtensionAPI",
-            targets: ["AppRouter-AppExtensionAPI"]
+            name: "AppRouterExtensionAPI",
+            targets: ["AppRouterExtensionAPI"]
         ),
         .library(
-            name: "AppRouter-Core",
-            targets: ["AppRouter-Core"]
+            name: "AppRouterCore",
+            targets: ["AppRouterCore"]
         ),
         .library(
-            name: "AppRouter-Route",
-            targets: ["AppRouter-Route"]
+            name: "AppRouterRoute",
+            targets: ["AppRouterRoute"]
         ),
         .library(
-            name: "AppRouter-RxSwift",
-            targets: ["AppRouter-RxSwift"]
+            name: "AppRouterRxSwift",
+            targets: ["AppRouterRxSwift"]
         )
     ],
     dependencies: [
@@ -30,27 +30,29 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "AppRouter-AppExtensionAPI",
+            name: "AppRouterExtensionAPI",
             path: "Sources/AppExtensionAPI"
         ),
         .target(
-            name: "AppRouter-Core",
-            dependencies: ["AppRouter-AppExtensionAPI"],
+            name: "AppRouterCore",
+            dependencies: ["AppRouterExtensionAPI"],
             path: "Sources/Core"
         ),
         .target(
-            name: "AppRouter-Route",
+            name: "AppRouterRoute",
             dependencies: [
-                "AppRouter-Core",
+                "AppRouterCore",
+                "ReusableView",
                 "RxSwift",
-                "ReusableView"
+                .product(name: "RxCocoa", package: "RxSwift"),
             ],
             path: "Sources/Route"
         ),
         .target(
-            name: "AppRouter-RxSwift",
+            name: "AppRouterRxSwift",
             dependencies: [
-                "RxSwift"
+                "RxSwift",
+                .product(name: "RxCocoa", package: "RxSwift")
             ],
             path: "Sources/RxSwift"
         )

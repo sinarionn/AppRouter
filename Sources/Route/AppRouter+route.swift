@@ -3,12 +3,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import ReusableView
-#if canImport(AppRouterExtensionAPI)
 import AppRouterExtensionAPI
-#endif
-#if canImport(AppRouterLight)
-import AppRouterLight
-#endif
 
 public protocol ViewFactoryType {
     func buildView<T>() throws -> T where T: UIViewController

@@ -1,11 +1,7 @@
 import Foundation
 import UIKit
-#if canImport(AppRouterExtensionAPI)
 import AppRouterExtensionAPI
-#endif
-#if canImport(AppRouterLight)
-import AppRouterLight
-#endif
+
 
 extension AppRouter {
     open class Presenter {
